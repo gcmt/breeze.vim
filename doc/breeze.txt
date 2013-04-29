@@ -1,0 +1,89 @@
+*breeze.txt* *breeze*
+
+                                breeze v1.0
+                                     ~ 
+                              Reference Manual
+
+
+==============================================================================
+CONTENTS                                                     *breeze-contents*
+
+          1. Overview .............................. |breeze-overview|
+          2. Commands .............................. |breeze-commands|
+          3. Settings .............................. |breeze-settings|
+          4. About ................................. |breeze-about|
+
+
+==============================================================================
+1. Overview                                                  *breeze-overview*
+
+Basic DOM navigation.
+
+Requirements
+
+    * Vim 7.3+
+    * Vim compiled with python 2.6+
+
+
+==============================================================================
+2. Commands                                                  *breeze-commands*
+
+
+------------------------------------------------------------------------------
+BreezeMatchTag                                                *BreezeMatchTag*
+
+If the cursor is on the opening tag, this command moves the cursor to the
+closing tag, and vice-versa. If the command is called in other locations this
+command moves the cursor to the opening tag of the node that presumably enclose
+our position.
+
+
+------------------------------------------------------------------------------
+BreezeNextSibling                                          *BreezeNextSibling*
+
+Moves the cursor to the next sibling node.
+
+
+------------------------------------------------------------------------------
+BreezePrevSibling                                          *BreezePrevSibling*
+
+Moves the cursor to the previous sibling node.
+
+
+------------------------------------------------------------------------------
+BreezeFirstChild                                            *BreezeFirstChild*
+
+Moves the cursor to the first child node.
+
+
+------------------------------------------------------------------------------
+BreezeLastChild                                              *BreezeLastChild*
+
+
+Moves the cursor to the last child node.
+
+
+------------------------------------------------------------------------------
+BreezeParent                                                    *BreezeParent*
+
+Moves the cursor to the parent node.
+
+
+------------------------------------------------------------------------------
+BreezePrintDom                                                *BreezePrintDom*
+
+Prints the DOM.
+
+
+==============================================================================
+3. Settings                                                *breeze-settings*
+
+None.
+
+
+==============================================================================
+4. About                                                      *breeze-about*
+
+Author: Giacomo Comitti
+License: MIT
+Git repository: https://github.com/gcmt/breeze.vim
