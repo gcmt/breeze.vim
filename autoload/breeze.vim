@@ -1,11 +1,11 @@
 " ============================================================================
 " File: autoload/breeze.vim
-" Description: Fast XHTML navigation
+" Description: DOM navigation
 " Mantainer: Giacomo Comitti (https://github.com/gcmt)
 " Url: https://github.com/gcmt/breeze.vim
 " License: MIT
 " Version: 1.0
-" Last Changed: 29/04/2013
+" Last Changed: 30/04/2013
 " ============================================================================
 
 " init
@@ -17,16 +17,29 @@ fu! breeze#init()
 endfu
 
 call breeze#init()
+let g:breeze_initialized = 1
 
 
 " wrappers
 
-fu! breeze#PrintDom()
-    py breeze_plugin.print_dom()
+fu! breeze#JumpForward()
+    py breeze_plugin.jump_forward()
 endfu
 
-fu! breeze#MatchTag()
-    py breeze_plugin.match_tag()
+fu! breeze#JumpBackward()
+    py breeze_plugin.jump_backward()
+endfu
+
+fu! breeze#CurrentTag()
+    py breeze_plugin.current_tag()
+endfu
+
+fu! breeze#HighlightTag()
+    py breeze_plugin.highlight_curr_tag()
+endfu
+
+fu! breeze#HighlightTagBlock()
+    py breeze_plugin.highlight_tag_block()
 endfu
 
 fu! breeze#NextSibling()
@@ -48,3 +61,28 @@ endfu
 fu! breeze#Parent()
     py breeze_plugin.goto_parent()
 endfu
+
+fu! breeze#PrintDom()
+    py breeze_plugin.print_dom()
+endfu
+
+
+" Autocommands
+
+augroup breeze_plugin
+
+    au!
+    au Colorscheme * py breeze_plugin.setup_colors()
+    au BufEnter *.html,*.htm,*.xhtml,*xml py breeze.utils.misc.clear_highlighting()
+    au BufLeave *.html,*.htm,*.xhtml,*.xml py breeze.utils.misc.clear_highlighting()
+
+    " update the cache
+    au BufReadPost,BufWritePost,BufEnter *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
+    au CursorHold,CursorHoldI *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
+    au InsertEnter,InsertLeave *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
+
+    if g:breeze_highlight_tag
+        au CursorMoved *.html,*.htm,*.xhtml,*.xml py breeze_plugin.highlight_curr_tag()
+    endif
+
+augroup END
