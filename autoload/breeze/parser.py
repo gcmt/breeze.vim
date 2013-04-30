@@ -162,33 +162,28 @@ class Parser(HTMLParser):
 
         return closest_node, closest_depth
 
-    def print_dom_tree(self, indent=2, showpos=False):
+    def print_dom_tree(self, indent=2):
         """Print the parsed DOM tree."""
+
+        def _print_tree(tree, depth, indent):
+            """Internal function for printing the HTML tree."""
+            print(" " * depth + tree.tag + pos)
+            for c in tree.children:
+                _print_tree(c, depth + indent, indent)
+
         if self.tree.children:
-            self._print_tree(self.tree.children[0], 0, indent, showpos)
+            self._print_tree(self.tree.children[0], 0, indent)
 
-    def _print_tree(self, tree, depth, indent, showpos):
-        """Internal function for printing the HTML tree."""
-        if showpos:
-            pos = " :: start={0} end={1}".format(tree.start, tree.end)
-        else:
-            pos = ""
-        print(" " * depth + tree.tag + pos)
-
-        for c in tree.children:
-            self._print_tree(c, depth + indent, indent, showpos)
-
-    def flatten_dom(self):
+    def all_nodes(self):
         """Flatten the DOM tree. Returns a generator."""
+
+        def _flatten(tree):
+            g = [tree]
+            for c in tree.children:
+                g = itertools.chain(g, _flatten(c))
+            return g
+
         if self.tree.children:
-            return self._flatten(self.tree.children[0])
+            return _flatten(self.tree.children[0])
         else:
             return []
-
-    def _flatten(self, tree):
-        g = [tree]
-        for c in tree.children:
-            subtree = self._flatten(c)
-            g = itertools.chain(g, subtree)
-        return g
-

@@ -40,7 +40,7 @@ class Jumper(object):
         vim.command("setlocal noreadonly")
 
         top, bot = self.misc.window_bundaries()
-        ps = [node.start for node in self.plug.parser.flatten_dom()
+        ps = [node.start for node in self.plug.parser.all_nodes()
               if node.start[0] >= top and node.start[0] <= bot]
 
         vim.command("try|undojoin|catch|endtry")
