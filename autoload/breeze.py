@@ -207,12 +207,20 @@ class Breeze(object):
         """
         node = self.parser.get_current_node()
         if node:
-            row, _ = self.misc.cursor()
+
+            row, col = self.misc.cursor()
             if row != node.start[0]:
                 target = node.start
             else:
-                target = node.end
-            self.misc.cursor((target[0], target[1]+2))
+                attrslen = self.misc.attrs_len(node)
+                endcol = node.start[1] + len(node.tag) + attrslen + 2
+                if col < endcol:
+                    target = node.end
+                else:
+                    target = node.start
+
+            self.misc.cursor((target[0], target[1] + 2))
+
         else:
             self.misc.echom("cannot locate the current node")
 
