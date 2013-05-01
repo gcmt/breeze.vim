@@ -98,10 +98,14 @@ class Breeze(object):
             match = self.settings.get("tag_color_darkbg")
             block = self.settings.get("tagblock_color_darkbg")
 
-        vim.command("hi link BreezeShade {0}".format(shade))
-        vim.command("hi link BreezeJumpMark {0}".format(marks))
-        vim.command("hi link BreezeTag {0}".format(match))
-        vim.command("hi link BreezeTagBlock {0}".format(block))
+        groups = ("BreezeShade", "BreezeJumpMark", "BreezeTag", "BreezeTagBlock")
+        colors = (shade, marks, match, block)
+        for g, c in zip(groups, colors):
+            if "=" not in c:
+                # a group is found
+                vim.command("hi link {0} {1}".format(g, c))
+            else:
+                vim.command("hi {0} {1}".format(g, c))
 
     @add_pos_to_jumplist
     @parse_current_buffer

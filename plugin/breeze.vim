@@ -24,29 +24,26 @@ let g:breeze_highlight_tag =
 
 " colors 
 
-hi BreezeDefaultShade gui=NONE guifg=#777777 cterm=NONE ctermfg=242
-hi BreezeDefaultJumpMark gui=bold guifg=#ff6155 cterm=bold ctermfg=203
-
-let g:breeze_tag_color = 
+let g:breeze_tag_color =
     \ get(g:, 'breeze_tag_color', 'MatchParen')
-let g:breeze_tag_color_darkbg = 
+let g:breeze_tag_color_darkbg =
     \ get(g:, 'breeze_tag_color_darkbg', 'MatchParen')
 
-let g:breeze_shade_color = 
-    \ get(g:, 'breeze_shade_color', 'BreezeDefaultShade')
-let g:breeze_shade_color_darkbg = 
-    \ get(g:, 'breeze_shade_color_darkbg', 'BreezeDefaultShade')
-
-let g:breeze_jumpmark_color = 
-    \get(g:, 'breeze_jumpmark_color', 'BreezeDefaultJumpMark')
-let g:breeze_jumpmark_color_darkbg = 
-    \ get(g:, 'breeze_jumpmark_color_darkbg', 'BreezeDefaultJumpMark')
-
-let g:breeze_tagblock_color = 
+let g:breeze_tagblock_color =
     \ get(g:, 'breeze_tagblock_color', 'MatchParen')
-let g:breeze_tagblock_color_darkbg = 
+let g:breeze_tagblock_color_darkbg =
     \ get(g:, 'breeze_tagblock_color_darkbg', 'MatchParen')
 
+
+let g:breeze_shade_color =
+    \ get(g:, 'breeze_shade_color', 'gui=NONE guifg=#777777 cterm=NONE ctermfg=242')
+let g:breeze_shade_color_darkbg =
+    \ get(g:, 'breeze_shade_color_darkbg', 'gui=NONE guifg=#777777 cterm=NONE ctermfg=242')
+
+let g:breeze_jumpmark_color =
+    \get(g:, 'breeze_jumpmark_color', 'gui=bold guifg=#ff6155 cterm=bold ctermfg=203')
+let g:breeze_jumpmark_color_darkbg =
+    \ get(g:, 'breeze_jumpmark_color_darkbg', 'gui=bold guifg=#ff6155 cterm=bold ctermfg=203')
 
 " Commands
 

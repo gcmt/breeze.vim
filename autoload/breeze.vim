@@ -72,7 +72,7 @@ endfu
 augroup breeze_plugin
 
     au!
-    au Colorscheme * py breeze_plugin.setup_colors()
+    au Colorscheme *.html,*.htm,*.xhtml,*.xml py breeze_plugin.setup_colors()
     au BufEnter *.html,*.htm,*.xhtml,*xml py breeze.utils.misc.clear_highlighting()
     au BufLeave *.html,*.htm,*.xhtml,*.xml py breeze.utils.misc.clear_highlighting()
 
