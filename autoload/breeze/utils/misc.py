@@ -11,7 +11,7 @@ import vim
 
 
 def echom(msg):
-    """Display a simple feedback to the user via the command line."""
+    """Gives a simple feedback to the user via the command line."""
     vim.command('echom "[breeze] {0}"'.format(msg.replace('"', '\"')))
 
 
@@ -19,7 +19,6 @@ def cursor(target=None, kj=False):
     """Moves the cursor.
 
     If the kj parameter is set to True, then the command behaves as following:
-
     :help keepjumps -> Moving around in {command} does not change the '', '.
                        and '^ marks, the jumplist or the changelist...
     """
@@ -36,28 +35,29 @@ def window_bundaries():
     scrolloff = vim.eval("&scrolloff")
     vim.command("setlocal scrolloff=0")
 
+    # :help keepjumps -> Moving around in {command} does not change the '',
+    # '. and '^ marks, the jumplist or the changelist.
     vim.command("keepjumps normal! H")
     top = cursor()[0]
     vim.command("keepjumps normal! L")
     bot = cursor()[0]
 
+    # restore position and changed options
     cursor(curr_pos)
-
-    # restore old value
     vim.command("setlocal scrolloff={0}".format(scrolloff))
 
     return top, bot
 
 
 def highlight(group, patt, priority=10):
-    """Match the given group."""
+    """Wraps the matchadd() vim function."""
     vim.eval("matchadd('{0}', '{1}', {2})".format(
         group, patt, priority))
 
 
 def subst_char(buffer, v, row, col):
-    """Swaps a character in the buffer with the give character at the
-    given position. Return the substitute character."""
+    """Substitutes a character in the buffer with the given character at the
+    given position. Return the substituted character."""
     if row >= len(buffer):
         raise ValueError("row index out of bound")
 
@@ -73,7 +73,7 @@ def subst_char(buffer, v, row, col):
 
 
 def clear_highlighting():
-    """Restores highlighting."""
+    """Clears Breeze highlightings."""
     matches = vim.eval("getmatches()")
     g = ('BreezeJumpMark', 'BreezeShade', 'BreezeTag', 'BreezeTagBlock')
     for match in matches:
@@ -82,5 +82,5 @@ def clear_highlighting():
 
 
 def attrs_len(node):
-    """Return the length of the node attributes (how many characters)."""
+    """Returns the length of rendered attributes."""
     return sum(len(a) + len(v) for a, v in node.attrs) + 3 * len(node.attrs)

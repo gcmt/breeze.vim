@@ -5,12 +5,20 @@
 " Url: https://github.com/gcmt/breeze.vim
 " License: MIT
 " Version: 1.0
-" Last Changed: 30/04/2013
+" Last Changed: 5/1/2013
 " ============================================================================
+"
+" TODO:
+"
+"   - addcommand for moving to a tag with a specific id/class and if there are
+"   more than one, add the ability to cycle among them
+"
+"   - add command to highlight tags with a specific id/class
+"
 
 " Init
 
-if exists("g:breeze_loaded") || &cp || exists("g:breeze_disable") || 
+if exists("g:breeze_loaded") || &cp || exists("g:breeze_disable") ||
     \ !has('python')
     finish
 endif
@@ -19,10 +27,10 @@ let g:breeze_loaded = 1
 
 " Settings
 
-let g:breeze_highlight_tag = 
+let g:breeze_highlight_tag =
     \ get(g:, 'breeze_highlight_tag', 1)
 
-" colors 
+" colors
 
 let g:breeze_tag_color =
     \ get(g:, 'breeze_tag_color', 'MatchParen')
@@ -67,6 +75,6 @@ command! BreezePrintDom call breeze#PrintDom()
 
 augroup breeze_init
     au!
-    au BufWinEnter *.html,*.htm,*.xhtml,*.xml if !exists("g:breeze_initialized") | 
-                \ call breeze#init() | endif
+    au BufWinEnter *.html,*.htm,*.xhtml,*.xml
+        \ if !exists("g:breeze_initialized") | call breeze#init() | endif
 augroup END

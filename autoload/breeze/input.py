@@ -3,8 +3,9 @@
 breeze.input
 ~~~~~~~~~~~~
 
-This module defines the class responsible for handling the input coming
-from the user.
+Input class definition.
+
+Input is responsible for handling the input from the command line.
 """
 
 import vim
@@ -16,13 +17,17 @@ class Input:
         self.reset()
 
     def reset(self):
+        """Resets the input state.
+
+        This method is called implicitly in the "get" method.
+        """
         self.LEFT = self.RIGHT = self.UP = self.DOWN = self.BS = None
         self.RETURN = self.ESC = self.TAB = None
         self.MOUSE = self.CTRL = self.INTERRUPT = None
         self.CHAR = None
 
     def get(self):
-        """To read the key pressed by the user."""
+        """Reads the key pressed by the user in the command line."""
         self.reset()
 
         nr_char = vim.eval("getchar()")

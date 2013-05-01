@@ -3,7 +3,16 @@
 breeze.jumper
 ~~~~~~~~~~~~~
 
-Jumper definition.
+Jumper class definition.
+
+The Jumper is responsible for the jumping functionality:
+
+    1. display jump marks on the current buffer
+    2. ask the user for the destination mark
+    3. jump to the selected mark
+
+The only method that should be called from the outside and that provide
+the above functionality is the "jump" method.
 """
 
 import vim

@@ -3,7 +3,10 @@
 breeze.parser
 ~~~~~~~~~~~~~
 
-Parser definition.
+Parser class definition.
+
+The Parser is responsible for parsing the current buffer and generating
+a DOM tree.
 """
 
 import vim
@@ -20,7 +23,7 @@ except ImportError:
 
 
 class Node(object):
-    """DOM node definition."""
+    """Node definition."""
 
     def __init__(self, tag="", attrs=None, parent=None, start=None, end=None):
         self.tag = tag
@@ -41,7 +44,6 @@ class Node(object):
 
 class Parser(HTMLParser):
     """Custom HTML parser."""
-    # TODO: error handling for bad formatted html
 
     def __init__(self):
         HTMLParser.__init__(self)  # TODO: check if this way is supported in python 3
@@ -57,8 +59,7 @@ class Parser(HTMLParser):
             "command", "keygen", "track", "wbr"])
 
     def feed(self, buffer):
-        """Overrides the 'feed' method with some initialization so every time
-        we call 'feed' we get a brand new tree."""
+        """Generates a brand new tree at each call."""
         self.tree = Node(tag="root")
         self.stack = [self.tree]
         HTMLParser.feed(self, "\n".join(buffer))
@@ -66,11 +67,7 @@ class Parser(HTMLParser):
         self.reset()
 
     def handle_startendtag(self, tag, attrs):
-        """Handles empty tags.
-
-        'skip_emptytag_check' is used to prevent infinite recursive calls
-        when calling 'handle_starttag'.
-        """
+        """Handles empty tags."""
         self.handle_starttag(tag, attrs, skip_emptytag_check=True)
         self.handle_endtag(tag)
 
@@ -93,31 +90,30 @@ class Parser(HTMLParser):
             self.stack.append(node)
 
     def handle_endtag(self, tag):
-        """Handles the end of a tag."""
+        """Handles the end of a tag.
+
+        If a script tag is opened, ignore all the junk in there until
+        the tag is closed.
+        """
         if self.stack:
             if self.stack[-1].tag == "script" and tag != "script":
-                # ignore everything inside script tags
+                # ignore everything inside script tag
                 return
 
             self.stack[-1].end = self.getpos()
             self.stack.pop(-1)
 
     def get_current_node(self):
-        """High level method that search for the closest tag that encloses
-        our current cursor position."""
+        """Searches for the closest tag that encloses our current cursor
+        position."""
         if self.tree.children:
             node, depth = self._closest_node(
                 self.tree.children[0], 0, None, -1, self.misc.cursor())
             return node
 
     def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
-        """Finds the closest tag that encloses our current cursor position.
-
-        TODO: This method needs to be way more efficient, and probably it can.
-        hint: there is no need to visit the whole tree once we have found the
-        closest node and we are going to go "up" the tree.
-        """
-        # compute tag boundaries
+        """Finds the closest tag that encloses our current cursor
+        position."""
         row, col = pos
         startrow, startcol = tree.start[0], tree.start[1]
         endrow = tree.end[0]
@@ -140,13 +136,13 @@ class Parser(HTMLParser):
         else:
             cond = False
 
-        # ok, the tag encloses our position. Now we assume this is
-        # the closest (reltive to our position) tag.
+        # if cond is True the tag encloses our position and we temporarily
+        # assume that this is the closest tag relative to our position
         if cond:
             closest_node = tree
             closest_depth = depth
 
-        # check recursively
+        # check recursively for the closest tag
         for c in tree.children:
             n, d, = self._closest_node(
                         c, depth + 1, closest_node, closest_depth, pos)
@@ -156,8 +152,9 @@ class Parser(HTMLParser):
                 closest_depth = d
 
             if depth < closest_depth:
-                # we have found the closest node, there is no need to
-                # continue the search
+                # we have already found the closest node and we are going up
+                # the tree structure (depth < closest_depth). There is no
+                # need to continue the search
                 return closest_node, closest_depth
 
         return closest_node, closest_depth
@@ -175,7 +172,7 @@ class Parser(HTMLParser):
             _print_tree(self.tree.children[0], 0, indent)
 
     def all_nodes(self):
-        """Flatten the DOM tree. Returns a generator."""
+        """Returns all DOM nodes as a generator."""
 
         def _flatten(tree):
             g = [tree]

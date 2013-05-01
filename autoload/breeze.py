@@ -3,7 +3,7 @@
 breeze.py
 ~~~~~~~~~
 
-This module defines all classes of the Breeze plugin.
+This module defines the main class of the Breeze plugin.
 """
 
 import os
@@ -24,7 +24,7 @@ class Breeze(object):
     """Main Breeze class."""
 
     def __init__(self):
-        # modules reference shortcuts
+        # module reference shortcuts
         self.settings = breeze.utils.settings
         self.misc = breeze.utils.misc
 
@@ -43,7 +43,7 @@ class Breeze(object):
              "img", "embed", "param", "area", "col", "input", "command",
              "keygen", "track", "wbr"])
 
-        # profiling dom parsing
+        # profiling stuff
         self.calls = 0
         self.sum = 0
         self.average = 0
@@ -63,7 +63,7 @@ class Breeze(object):
         caching.
 
         This decorator ensures that the wrapped method will have access to
-        a non empty DOM tree structure.
+        a fully parsed DOM tree structure for the current buffer.
         """
         def wrapper(self, *args, **kwargs):
             if self.refresh_cache or vim.eval("&modified") == '1':
@@ -87,6 +87,7 @@ class Breeze(object):
 
     def setup_colors(self):
         """Setups highlight groups according to the current settings."""
+
         if vim.eval("&background") == 'light':
             shade = self.settings.get("shade_color")
             marks = self.settings.get("jumpmark_color")
@@ -110,17 +111,18 @@ class Breeze(object):
     @add_pos_to_jumplist
     @parse_current_buffer
     def jump_forward(self):
-        """Jump forward!"""
+        """Jump forward! Displays jump marks, asks for the destination and
+        jumps on the selected tag."""
         self.jumper.jump(backward=False)
 
     @add_pos_to_jumplist
     @parse_current_buffer
     def jump_backward(self):
-        """Jump backward!"""
+        """Jump backward! Displays jump marks, asks for the destination and
+        jumps on the selected tag."""
         self.jumper.jump(backward=True)
 
     @parse_current_buffer
-        """Highlights opening and closing tags."""
     def highlight_curr_tag(self, node=None, group=None):
         """Highlights opening and closing tags of the current node."""
         if group is None:
@@ -148,10 +150,9 @@ class Breeze(object):
 
     @parse_current_buffer
     def highlight_tag_block(self, node=None, group=None):
-        """Highlights the whole current tag. Same as the 'vap' movement.
+        """Highlights the whole current node as a block.
 
-        Because 'vap' does not work with empty tags and this may be useful
-        for other niceties.
+        This works exactly as the 'vat' motion.
         """
         if group is None:
             group = "BreezeTagBlock"
@@ -176,7 +177,7 @@ class Breeze(object):
                     eline, endcol)
                 self.misc.highlight(group, closing)
 
-                # highlight the intern
+                # highlight lines between start and end tag
                 patt = "\\%>{0}l\\%<{1}l".format(sline, eline)
                 self.misc.highlight(group, patt)
 
@@ -189,6 +190,7 @@ class Breeze(object):
                         sline, startcol, endcol)
                     self.misc.highlight(group, patt)
                 else:
+                    # highlight tag on a single line
                     line, startcol = node.start[0], node.start[1]
                     endcol = node.end[1] + len(node.tag) + 4
                     patt = "\\%{0}l\\%>{1}c\\%<{2}c".format(
@@ -202,9 +204,9 @@ class Breeze(object):
     def current_tag(self):
         """Matches the current tag.
 
-        If the cursor isn't on the start line of the tag, the cursor is
-        positioned at the opening tag. If the cursor is on the first line of
-        the tag instead, the cursor is positioned at the closing tag.
+        If the cursor is on the first line of the tag the cursor is positioned
+        at the closing tag, and vice-versa.  If the cursor isn't on the start
+        line of the tag, the cursor is positioned at the opening tag.
         """
         node = self.parser.get_current_node()
         if node:
