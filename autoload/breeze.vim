@@ -98,6 +98,7 @@ augroup breeze_plugin
     au BufReadPost,BufWritePost,BufEnter *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
     au CursorHold,CursorHoldI *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
     au InsertEnter,InsertLeave *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
+    au BufWritePost *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
 
     if g:breeze_hl_element
         " the user want current element always highlighted. The CursorMoved'
