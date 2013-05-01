@@ -57,7 +57,7 @@ class Parser(HTMLParser):
     """Custom HTML parser."""
 
     def __init__(self):
-        HTMLParser.__init__(self)  # TODO: check if this way is supported in python 3
+        HTMLParser.__init__(self)  # TODO: check with python 3
 
         # module reference shortcuts
         self.misc = breeze.utils.misc
@@ -86,7 +86,7 @@ class Parser(HTMLParser):
         """Handles the start of a tag.
 
         Note how this method handles empty tags. The HTMLParser does not
-        recognize self-enclosing tags if they aren't closed with '../>',
+        recognize self-closing tags if they aren't closed with '../>',
         although this is totally acceptable in non-XHTML documents. So we call
         the handle_startendtag tags by ourselves and we make sure we don't run
         infinite recursive calls with the skip_emptytag_check parameter.
@@ -115,7 +115,7 @@ class Parser(HTMLParser):
             self.stack.pop(-1)
 
     def get_current_node(self):
-        """Searches for the closest tag that encloses our current cursor
+        """Searches for the closest element that encloses our current cursor
         position."""
         if self.tree.children:
             node, depth = self._closest_node(
@@ -123,7 +123,7 @@ class Parser(HTMLParser):
             return node
 
     def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
-        """Finds the closest tag that encloses our current cursor
+        """Finds the closest element that encloses our current cursor
         position."""
         row, col = pos
         startrow, startcol = tree.start[0], tree.start[1]
@@ -135,7 +135,7 @@ class Parser(HTMLParser):
         else:
             endcol = tree.end[1] + len(tree.tag) + 2
 
-        # check if the current position is inside the tag boundaries
+        # check if the current position is inside the element boundaries
         if startrow < row < endrow:
             cond = True
         elif startrow == row and endrow != row and startcol <= col:
@@ -147,13 +147,13 @@ class Parser(HTMLParser):
         else:
             cond = False
 
-        # if cond is True the tag encloses our position and we temporarily
-        # assume that this is the closest tag relative to our position
+        # if cond is True the element encloses our position and we temporarily
+        # assume that this is the closest element relative to our position
         if cond:
             closest_node = tree
             closest_depth = depth
 
-        # check recursively for the closest tag
+        # check recursively for the closest element
         for c in tree.children:
             n, d, = self._closest_node(
                         c, depth + 1, closest_node, closest_depth, pos)
