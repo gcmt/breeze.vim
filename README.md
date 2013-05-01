@@ -2,7 +2,7 @@
 
 **v1.0**
 
-**Features:**
+###Features###
 * HTML navigation inspired by vim-easymotion.
 * Tag matching.
 * Current element highlighting.
@@ -22,8 +22,8 @@ directory or use plugin managers such as Vundle or Pathogen.
 ![Screenshot](extra/jump.gif "Tag jumping inspired by vim-easymotion")   
 
 As you can see this form is heavily inspired by vim-easimotion.
-To jump to following tags use the command `BreezeJumpForward`. 
-Use `BreezeJumpBackward` to move to preceding tags.
+To jump to following tags use the command `BreezeJumpF`. 
+Use `BreezeJumpB` to move to preceding tags.
 
 When you fire one of the aforementioned commands, Breeze display
 colored marks on the tags you can jump to and wait for your choice.
@@ -135,7 +135,7 @@ default: `MatchParen`
 ![Screenshot](extra/dom.gif "DOM navigation")   
 
 The available commands for DOM navigation cover only low level movements at the
-moment but they are going to be expanded in the future.
+moment but might be useful for exploring dense html files.
 
 
 ### Commands
