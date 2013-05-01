@@ -84,7 +84,7 @@ class Jumper(object):
         """Ask the user where to jump."""
         input = breeze.input.Input()
         while True:
-            vim.command('echo " target: "')
+            vim.command('echohl Question|echo " target: "|echohl None')
             input.get()
 
             if input.ESC or input.INTERRUPT:
