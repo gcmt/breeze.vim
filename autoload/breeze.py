@@ -123,13 +123,6 @@ class Breeze(object):
         self.jumper.jump(backward=True)
 
     @parse_current_buffer
-    def highlight_curr_tag(self, node=None, group=None):
-        """Highlights opening and closing tags of the current node."""
-        if group is None:
-            group = "BreezeTag"
-        if node is None:
-            node = self.parser.get_current_node()
-
         self.misc.clear_highlighting()
         if node:
             line, startcol = node.start[0], node.start[1]+1
