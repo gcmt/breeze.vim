@@ -83,4 +83,5 @@ def clear_highlighting():
 
 def attrs_len(node):
     """Returns the length of rendered attributes."""
-    return sum(len(a) + len(v) for a, v in node.attrs) + 4 * len(node.attrs)
+    return (sum(len(a) + len(v) for a, v in node.attrs.items())
+            + 4 * len(node.attrs))

@@ -26,12 +26,12 @@ class Node(object):
     """Node definition."""
 
     def __init__(self, tag="", attrs=None, parent=None, start=None, end=None):
-        self.tag = tag
-        self.attrs = attrs
-        self.start = start
-        self.end = end
-        self.parent = parent
-        self.children = []
+        self.tag = tag          # tag name
+        self.attrs = attrs      # a dictionary {attr: value, ..}
+        self.start = start      # a tuple (row, col)
+        self.end = end          # a tuple (row, col)
+        self.parent = parent    # a Node or None (if root)
+        self.children = []      # a list of Nodes
 
     def __str__(self):
         return "<{0} start={1} end={2}>".format(
@@ -41,6 +41,17 @@ class Node(object):
         return "<{0} start={1} end={2}>".format(
             self.tag, self.start, self.end)
 
+    def id(self):
+        """Returns the id attribute."""
+        return self.attrs.get("id", [])
+
+    def classes(self):
+        """Returns the class attribute."""
+        classes = self.attrs.get("class")
+        if classes:
+            return classes.split()
+        else:
+            return []
 
 class Parser(HTMLParser):
     """Custom HTML parser."""
@@ -85,7 +96,7 @@ class Parser(HTMLParser):
             return
 
         if self.stack:
-            node = Node(tag, attrs, self.stack[-1], self.getpos())
+            node = Node(tag, dict(attrs), self.stack[-1], self.getpos())
             self.stack[-1].children.append(node)
             self.stack.append(node)
 
