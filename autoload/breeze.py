@@ -75,6 +75,16 @@ class Breeze(object):
             return f(self, *args, **kwargs)
         return wrapper
 
+    def add_pos_to_jumplist(f):
+        """Adds the current cursor position to the jump list.
+
+        The user can come back with Ctrl+O.
+        """
+        def wrapper(self, *args, **kwargs):
+            vim.command("normal! m'")
+            return f(self, *args, **kwargs)
+        return wrapper
+
     def setup_colors(self):
         """Setups highlight groups according to the current settings."""
         if vim.eval("&background") == 'light':
@@ -93,11 +103,13 @@ class Breeze(object):
         vim.command("hi link BreezeTag {0}".format(match))
         vim.command("hi link BreezeTagBlock {0}".format(block))
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def jump_forward(self):
         """Jump forward!"""
         self.jumper.jump(backward=False)
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def jump_backward(self):
         """Jump backward!"""
@@ -176,6 +188,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def current_tag(self):
         """Matches the current tag.
@@ -195,6 +208,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def goto_next_sibling(self):
         """Moves the cursor to the next sibling node."""
@@ -214,6 +228,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def goto_prev_sibling(self):
         """Moves the cursor to the previous sibling node."""
@@ -233,6 +248,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def goto_first_child(self):
         """Moves the cursor to the first child of the current node."""
@@ -246,6 +262,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def goto_last_child(self):
         """Moves the cursor to the last child of the current node."""
@@ -259,6 +276,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def goto_parent(self):
         """Moves the cursor to the parent of the current node."""
@@ -272,6 +290,7 @@ class Breeze(object):
         else:
             self.misc.echom("cannot locate the current node")
 
+    @add_pos_to_jumplist
     @parse_current_buffer
     def print_dom(self):
         """Prints the DOM tree."""
