@@ -2,10 +2,8 @@
 
 **v1.0**
 
-HTML navigation inspired by vim-easymotion.
-
 **Features:**
-* HTML navigation like vim-easymotion.
+* HTML navigation inspired by vim-easymotion.
 * Tag matching.
 * Current element highlighting.
 * Low level DOM navigation.
