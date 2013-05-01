@@ -8,11 +8,18 @@ around vim functions.
 """
 
 import vim
+import breeze.utils.settings
 
 
 def echom(msg):
     """Gives a simple feedback to the user via the command line."""
     vim.command('echom "[breeze] {0}"'.format(msg.replace('"', '\"')))
+
+
+def echov(msg):
+    """Gives a feedback only if g:breeze_verbosity = 1."""
+    if breeze.utils.settings.get("verbosity", bool):
+        echom(msg)
 
 
 def cursor(target=None, kj=False):

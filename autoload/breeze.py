@@ -154,7 +154,7 @@ class Breeze(object):
                     line, startcol, endcol)
                 self.misc.highlight(group, patt)
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @parse_current_buffer
     def highlight_element_block(self, node=None, group=None):
@@ -205,7 +205,7 @@ class Breeze(object):
                         line, startcol, endcol)
                     self.misc.highlight(group, patt)
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -233,7 +233,7 @@ class Breeze(object):
             self.misc.cursor((target[0], target[1] + 2))
 
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -249,11 +249,11 @@ class Breeze(object):
                             target = ch[i+1].start
                             self.misc.cursor((target[0], target[1]+2))
                         else:
-                            self.misc.echom("no more siblings found")
+                            self.misc.echom("no siblings found")
             else:
                 self.misc.echom("no siblings found")
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -269,11 +269,11 @@ class Breeze(object):
                             target = ch[i-1].start
                             self.misc.cursor((target[0], target[1]+2))
                         else:
-                            self.misc.echom("no more siblings found")
+                            self.misc.echom("no siblings found")
             else:
                 self.misc.echom("no siblings found")
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -287,7 +287,7 @@ class Breeze(object):
             else:
                 self.misc.echom("no children found")
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -301,7 +301,7 @@ class Breeze(object):
             else:
                 self.misc.echom("no children found")
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -315,7 +315,7 @@ class Breeze(object):
             else:
                 self.misc.echom("no parent found")
         else:
-            self.misc.echom("cannot locate the current node")
+            self.misc.echov("cannot locate the current node")
 
     @remember_curr_pos
     @parse_current_buffer

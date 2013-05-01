@@ -45,6 +45,8 @@ let g:breeze_jumpmark_color =
 let g:breeze_jumpmark_color_darkbg =
     \ get(g:, 'breeze_jumpmark_color_darkbg', 'gui=bold guifg=#ff6155 cterm=bold ctermfg=203')
 
+let g:breeze_verbosity = get(g:, "breeze_verbosity", 0)
+
 " }}}
 
 " Commands {{{
