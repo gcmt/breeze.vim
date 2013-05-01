@@ -117,10 +117,10 @@ class Parser(HTMLParser):
         row, col = pos
         startrow, startcol = tree.start[0], tree.start[1]
         endrow = tree.end[0]
-        attrslen = self.misc.attrs_len(tree) + 2
+        attrslen = self.misc.attrs_len(tree)
 
         if tree.tag in self.empty_tags:
-            endcol = tree.start[1] + len(tree.tag) + attrslen + 3
+            endcol = tree.start[1] + len(tree.tag) + attrslen + 1
         else:
             endcol = tree.end[1] + len(tree.tag) + 2
 
