@@ -172,7 +172,7 @@ class Parser(HTMLParser):
                 _print_tree(c, depth + indent, indent)
 
         if self.tree.children:
-            self._print_tree(self.tree.children[0], 0, indent)
+            _print_tree(self.tree.children[0], 0, indent)
 
     def all_nodes(self):
         """Flatten the DOM tree. Returns a generator."""
