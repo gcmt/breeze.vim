@@ -10,6 +10,12 @@ import os
 import vim
 import time
 
+try:
+    # python 3
+    from html.parser import HTMLParseError
+except ImportError:
+    from HTMLParser import HTMLParseError
+
 sys.path.insert(0, os.path.split(
     vim.eval('fnameescape(globpath(&runtimepath, "' +
              os.path.join("autoload", "breeze.py") + '"))'))[0])
@@ -67,7 +73,12 @@ class Breeze(object):
         """
         def wrapper(self, *args, **kwargs):
             if self.refresh_cache or vim.eval("&modified") == '1':
-                self.parser.feed(vim.current.buffer)
+                try:
+                    self.parser.feed(vim.current.buffer)
+                except HTMLParseError as e:
+                    self.parser.reset()
+                    self.misc.clear_highlighting()
+                    return
                 self.cache = self.parser.tree
                 self.refresh_cache = False
             else:
