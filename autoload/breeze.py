@@ -120,24 +120,29 @@ class Breeze(object):
         self.jumper.jump(backward=True)
 
     @parse_current_buffer
-    def highlight_curr_tag(self):
         """Highlights opening and closing tags."""
+    def highlight_curr_tag(self, node=None, group=None):
+        """Highlights opening and closing tags of the current node."""
+        if group is None:
+            group = "BreezeTag"
+        if node is None:
+            node = self.parser.get_current_node()
+
         self.misc.clear_highlighting()
-        node = self.parser.get_current_node()
         if node:
             line, startcol = node.start[0], node.start[1]+1
             endcol = startcol + len(node.tag) + 1
-            opening = "\\%{0}l\\%>{1}c\%<{2}c".format(
+            patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
                 line, startcol, endcol)
-            self.misc.highlight("BreezeTag", opening)
+            self.misc.highlight(group, patt)
 
             if node.tag not in self.empty_tags:
 
                 line, startcol = node.end[0], node.end[1]+1
                 endcol = startcol + len(node.tag) + 2
-                closing = "\\%{0}l\\%>{1}c\%<{2}c".format(
+                patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
                     line, startcol, endcol)
-                self.misc.highlight("BreezeTag", closing)
+                self.misc.highlight(group, patt)
         else:
             self.misc.echom("cannot locate the current node")
 
