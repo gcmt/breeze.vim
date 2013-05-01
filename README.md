@@ -80,7 +80,7 @@ By default Breeze highlights the opening and closing tags of the current element
 To turn off this functionality you can set `g:breeze_highlight_element` to 0. However,
 you always have at your disposal the `BreezeHlElement` command to highlight the current element.
 If you prefer highlighting the whole element as a block you can use the `BreezeHlElementBlock` command
-(just like the `vat` vim motion. However it seems not working properly with self enclosing tags).
+(just like the `vat` vim motion. However it seems not working properly with self-closing tags).
 
 Another useful command is `BreezeMatchTag`. If the cursor is on an opening tag,
 this command moves the cursor to the corresponding closing tag, and vice-versa.
@@ -142,17 +142,17 @@ moment but they are going to be expanded in the future.
 
 ### Commands
 
-**BreezeNextSibling**
+**BreezeNextSibling**   
 Moves the cursor to the next sibling node.
 
-**BreezePrevSibling**
+**BreezePrevSibling**     
 Moves the cursor to the previous sibling node.
 
-**BreezeFirstChild**
+**BreezeFirstChild**   
 Moves the cursor to the first child node.
 
-**BreezeLastChild**
+**BreezeLastChild**   
 Moves the cursor to the last child node.
 
-**BreezeParent**
+**BreezeParent**     
 Moves the cursor to the parent node.
