@@ -85,7 +85,6 @@ augroup breeze_plugin
 
     if g:breeze_hl_element
         au CursorMoved *.html,*.htm,*.xhtml,*.xml py breeze_plugin.highlight_curr_element()
-        au BufWinEnter *.html,*.htm,*.xhtml,*xml py breeze_plugin.highlight_curr_element()
     endif
 
 augroup END
