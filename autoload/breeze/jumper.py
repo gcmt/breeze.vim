@@ -59,7 +59,7 @@ class Jumper(object):
                     else:
                         mark = None
                 else:
-                    if row > curr_pos[0]:
+                    if row >= curr_pos[0]:
                         mark = jump_marks[0]
                         jump_marks.pop(0)
                     else:
@@ -107,6 +107,7 @@ class Jumper(object):
 
         vim.command("syntax on")
         vim.command("setlocal nomodified")
+        vim.command("redraw")
 
     def jump(self, backward=False):
         """Displays jump marks, asks for the target key and moves
@@ -120,7 +121,6 @@ class Jumper(object):
             choice = self.ask_target_key()
             if choice is None:
                 break
-            vim.command("redraw")
 
         self.clear_jump_marks(table)
 
