@@ -30,17 +30,19 @@ fu! breeze#JumpBackward()
     py breeze_plugin.jump_backward()
 endfu
 
-fu! breeze#CurrentTag()
-    py breeze_plugin.current_tag()
+
+fu! breeze#MatchTag()
+    py breeze_plugin.match_tag()
 endfu
 
-fu! breeze#HighlightTag()
-    py breeze_plugin.highlight_curr_tag()
+fu! breeze#HighlightElement()
+    py breeze_plugin.highlight_curr_element()
 endfu
 
-fu! breeze#HighlightTagBlock()
-    py breeze_plugin.highlight_tag_block()
+fu! breeze#HighlightElementBlock()
+    py breeze_plugin.highlight_element_block()
 endfu
+
 
 fu! breeze#NextSibling()
     py breeze_plugin.goto_next_sibling()
@@ -81,9 +83,9 @@ augroup breeze_plugin
     au CursorHold,CursorHoldI *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
     au InsertEnter,InsertLeave *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
 
-    if g:breeze_highlight_tag
-        au CursorMoved *.html,*.htm,*.xhtml,*.xml py breeze_plugin.highlight_curr_tag()
-        au BufWinEnter *.html,*.htm,*.xhtml,*xml py breeze_plugin.highlight_curr_tag()
+    if g:breeze_hl_element
+        au CursorMoved *.html,*.htm,*.xhtml,*.xml py breeze_plugin.highlight_curr_element()
+        au BufWinEnter *.html,*.htm,*.xhtml,*xml py breeze_plugin.highlight_curr_element()
     endif
 
 augroup END

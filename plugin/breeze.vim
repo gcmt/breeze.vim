@@ -27,8 +27,8 @@ let g:breeze_loaded = 1
 
 " Settings
 
-let g:breeze_highlight_tag =
-    \ get(g:, 'breeze_highlight_tag', 1)
+let g:breeze_hl_element =
+    \ get(g:, 'breeze_hl_element', 1)
 
 " colors
 
@@ -58,9 +58,9 @@ let g:breeze_jumpmark_color_darkbg =
 command! BreezeJumpForward call breeze#JumpForward()
 command! BreezeJumpBackward call breeze#JumpBackward()
 
-command! BreezeCurrentTag call breeze#CurrentTag()
-command! BreezeHighlightTag call breeze#HighlightTag()
-command! BreezeHighlightTagBlock call breeze#HighlightTagBlock()
+command! BreezeMatchTag call breeze#MatchTag()
+command! BreezeHlElement call breeze#HighlightElement()
+command! BreezeHlElementBlock call breeze#HighlightElementBlock()
 
 command! BreezeNextSibling call breeze#NextSibling()
 command! BreezePrevSibling call breeze#PrevSibling()

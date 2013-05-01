@@ -112,18 +112,22 @@ class Breeze(object):
     @parse_current_buffer
     def jump_forward(self):
         """Jump forward! Displays jump marks, asks for the destination and
-        jumps on the selected tag."""
+        jumps to the selected tag."""
         self.jumper.jump(backward=False)
 
     @add_pos_to_jumplist
     @parse_current_buffer
     def jump_backward(self):
         """Jump backward! Displays jump marks, asks for the destination and
-        jumps on the selected tag."""
+        jumps to the selected tag."""
         self.jumper.jump(backward=True)
 
     @parse_current_buffer
+    def highlight_curr_element(self):
+        """Highlights opening and closing tags of the current element."""
         self.misc.clear_highlighting()
+        group = "BreezeTag"
+        node = self.parser.get_current_node()
         if node:
             line, startcol = node.start[0], node.start[1]+1
             endcol = startcol + len(node.tag) + 1
@@ -142,8 +146,8 @@ class Breeze(object):
             self.misc.echom("cannot locate the current node")
 
     @parse_current_buffer
-    def highlight_tag_block(self, node=None, group=None):
-        """Highlights the whole current node as a block.
+    def highlight_element_block(self, node=None, group=None):
+        """Highlights the current element.
 
         This works exactly as the 'vat' motion.
         """
@@ -194,7 +198,7 @@ class Breeze(object):
 
     @add_pos_to_jumplist
     @parse_current_buffer
-    def current_tag(self):
+    def match_tag(self):
         """Matches the current tag.
 
         If the cursor is on the first line of the tag the cursor is positioned
