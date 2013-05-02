@@ -47,7 +47,7 @@ class Jumper(object):
 
         vim.command("setlocal modifiable")
         vim.command("setlocal noreadonly")
-        vim.command("syntax off")
+        #vim.command("syntax off")
 
         top, bot = self.misc.window_bundaries()
         ps = [node.start for node in self.plug.parser.all_nodes()
@@ -114,7 +114,7 @@ class Jumper(object):
             row, col = pos[0]-1, pos[1]+1
             self.misc.subst_char(buf, old, row, col)
 
-        vim.command("syntax on")
+        #vim.command("syntax on")
         vim.command("setlocal nomodified")
         vim.command("redraw")
 
