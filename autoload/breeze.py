@@ -311,7 +311,6 @@ class Breeze(object):
         else:
             self.misc.echov("cannot locate the current node")
 
-    @remember_curr_pos
     @parse_current_buffer
     def print_dom(self):
         """Prints the DOM tree."""
