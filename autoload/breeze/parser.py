@@ -25,8 +25,10 @@ except ImportError:
 class Node(object):
     """Node definition."""
 
-    def __init__(self, tag="", attrs=None, parent=None, start=None, end=None):
+    def __init__(self, tag="", attrs=None, starttag_text="",
+                 parent=None, start=None, end=None):
         self.tag = tag          # tag name
+        self.starttag_text = starttag_text # raw starttag text
         self.attrs = attrs      # a dictionary {attr: value, ..}
         self.start = start      # a tuple (row, col)
         self.end = end          # a tuple (row, col)
@@ -96,7 +98,8 @@ class Parser(HTMLParser):
             return
 
         if self.stack:
-            node = Node(tag, dict(attrs), self.stack[-1], self.getpos())
+            node = Node(tag, dict(attrs), self.get_starttag_text(),
+                        self.stack[-1], self.getpos())
             self.stack[-1].children.append(node)
             self.stack.append(node)
 
@@ -128,10 +131,9 @@ class Parser(HTMLParser):
         row, col = pos
         startrow, startcol = tree.start[0], tree.start[1]
         endrow = tree.end[0]
-        attrslen = self.misc.attrs_len(tree)
 
         if tree.tag in self.empty_tags:
-            endcol = tree.start[1] + len(tree.tag) + attrslen + 1
+            endcol = tree.start[1] + len(tree.starttag_text)
         else:
             endcol = tree.end[1] + len(tree.tag) + 2
 
