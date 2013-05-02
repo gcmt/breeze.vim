@@ -42,8 +42,8 @@ key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
 
 **NOTE**: when setting the following options you can follow two ways:
 
-  * use a long list of "attribute=color .." (as you would normally do when
-     defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
+  * use a long list of "attribute=color" separated by spaces (as you would
+    normally do when defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
 
   * use the name of a previously defined highlight group. Note, however,
      that this does not work with highlight groups defined in your `.vimrc`.
@@ -56,9 +56,10 @@ the background text when you are using the *jumping* functionality.
 
 **g:breeze_shade_color_darkbg**: this setting defines the color that is used to
 shade the background text when you are using the *jumping* functionality with
-dark backgrounds (&background == dark). By default the value is equal to the
-*g:breeze_shade_color* setting.   
-*default*: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
+dark backgrounds (&background == dark). 
+If the value is an empty string the *g:breeze_shade_color* setting is used for dark backgrounds.  
+
+*default*: ``
 
 
 **g:breeze_jumpmark_color**: this setting defines the color that is used to
@@ -68,9 +69,10 @@ highlight jump marks when you are using the *jumping* functionality.
 
 **g:breeze_jumpmark_color_darkbg**: this setting defines the color that is used
 to highlight jump marks when you are using the *jumping* functionality with
-dark backgrounds (&background == dark). By default the value is equal to the 
-*g:breeze_jumpmark_color* setting.     
-*default*: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
+dark backgrounds (&background == dark). 
+If the value is an empty string the *g:breeze_jumpmark_color* setting is used for dark backgrounds.  
+
+*default*: ``
 
 
 
@@ -93,8 +95,8 @@ pressing `CTRL+O`.
 
 **NOTE**: when defining the following settings you have two options:
 
-  * use a long list of "attribute=color .." (as you would normally do when
-     defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
+  * use a long list of "attribute=color" separated by spaces (as you would
+    normally do when defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
 
   * use the name of a previously defined highlight group. Note, however,
      that this does not work with highlight groups defined in your `.vimrc`.
@@ -105,26 +107,15 @@ of the opening and closing tags of the current element.
 *default*: `1`
 
 
-**g:breeze_tag_color**: this setting defines the color that is used to
+**g:breeze_hl_color**: this setting defines the color that is used to
 highlight opening and closing tags.  
 *default:* `MatchParen`
 
 
-**g:breeze_tag_color_darkbg**: this setting defines the color that is used to
+**g:breeze_hl_color_darkbg**: this setting defines the color that is used to
 highlight opening and closing tags with dark backgrounds (&background == dark).
-By default the value is equal to the *g:breeze_tag_color* setting.  
-*default:* `MatchParen`
-
-
-**g:breeze_tagblock_color**: this setting defines the color that is used to
-highlight the current element as a block.  
-*default:* `MatchParen`
-
-
-**g:breeze_tagblock_color_darkbg**: this setting defines the color that is used to
-highlight the current element as a block with dark backgrounds (&background == dark).
-By default the value is equal to the *g:breeze_tagblock_color* setting.  
-*default:* `MatchParen`
+If the value is an empty string the *g:breeze_hl_color* setting is used for dark backgrounds.  
+*default:* ``
 
 
 

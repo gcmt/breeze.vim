@@ -88,10 +88,11 @@ default: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
 
 *g:breeze_shade_color_darkbg* this setting defines the color that is used to
 shade the background text when you are using the jumping functionality with
-dark backgrounds (&background == dark). By default the value is equal to the
-|g:breeze_shade_color| setting. 
+dark backgrounds (&background == dark). 
+If the value is an empty string the |g:breeze_shade_color| setting is 
+used for dark backgrounds.
 
-default: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
+default: ``
 
 
 *g:breeze_jumpmark_color* this setting defines the color that is used to
@@ -102,10 +103,12 @@ default: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
 
 *g:breeze_jumpmark_color_darkbg* this setting defines the color that is used
 to highlight jump marks when you are using the jumping functionality with
-dark backgrounds (&background == dark). By default the value is equal to the 
-|g:breeze_jumpmark_color| setting.     
+dark backgrounds (&background == dark).
+If the value is an empty string the |g:breeze_jumpmark_color| setting is
+used for dark backgrounds.  
 
-default: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
+
+default: ``
 
 
 
@@ -145,31 +148,19 @@ highlighting of the opening and closing tags of the current element.
 default: `1`
 
 
-*g:breeze_tag_color* this setting defines the color that is used to
+*g:breeze_hl_color* this setting defines the color that is used to
 highlight opening and closing tags.  
 
 default: `MatchParen`
 
 
-*g:breeze_tag_color_darkbg* this setting defines the color that is used to
+*g:breeze_hl_color_darkbg* this setting defines the color that is used to
 highlight opening and closing tags with dark backgrounds (&background == dark).
-By default the value is equal to the |g:breeze_tag_color| setting.  
-
-default: `MatchParen`
-
-
-*g:breeze_tagblock_color* this setting defines the color that is used to
-highlight the current element as a block.  
-
-default: `MatchParen`
+If the value is an empty string the |g:breeze_hl_color| setting is used for
+dark backgrounds.  
 
 
-*g:breeze_tagblock_color_darkbg* this setting defines the color that is used
-to highlight the current element as a block with dark backgrounds 
-(&background == dark). By default the value is equal to the |g:breeze_tagblock_color| 
-setting. 
-
-default: `MatchParen`
+default: ``
 
 
 
