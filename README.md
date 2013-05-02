@@ -11,6 +11,7 @@
 
 ### Requirements
 * Vim compiled with python 2.6+
+* Unix, Mac OSX (untested on Windows)
 
 
 ### Installation
@@ -30,7 +31,7 @@ the origin of the problem.
 
 As you can see this way of navigating the document is heavily inspired by vim-easymotion.
 To jump to following tags use the command `BreezeJumpF`. 
-Use `BreezeJumpB` to move to preceding tags.
+Use `BreezeJumpB` to jump to preceding tags.
 
 When you run one of the aforementioned commands, Breeze displays
 colored marks on the tags you can jump to and wait for your choice.
@@ -42,7 +43,7 @@ key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
 
 **g:breeze_jump_to_angle_bracket**: set this option to 1 to jump to the
 opening angle brackets of the tag you are jumping to. Set this option to 0 to
-jump to the first letter of the tag isnstead.
+jump to the first letter of the tag instead.
 
 
 **NOTE**: when setting the following options you can follow two ways:
@@ -85,16 +86,16 @@ If the value is an empty string the *g:breeze_jumpmark_color* setting is used fo
 ![Screenshot](extra/high.gif "Current element highlighting")   
 
 By default Breeze highlights the opening and closing tags of the current element.
-To turn off this functionality you can set `g:breeze_highlight_element` to 0. However,
+To turn off this functionality you can set `g:breeze_hl_element` to 0. However,
 you always have at your disposal the `BreezeHlElement` command to highlight the current element.
 If you prefer highlighting the whole element as a block you can use the `BreezeHlElementBlock` command
 (just like the `vat` vim motion. However it seems not working properly with self-closing tags).
 
 Another useful command is `BreezeMatchTag`. If the cursor is on an opening tag,
 this command moves the cursor to the corresponding closing tag, and vice-versa.
-If the command is called in within a element, this command moves the cursor to
-its opening tag. Remember that you can easily jump back to the original position
-pressing `CTRL+O`.
+If the command is called within an element, this command moves the cursor to
+its opening tag. Remember that you can easily jump back to previous positions
+with `CTRL+O`.
 
 ### Settings
 

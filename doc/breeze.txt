@@ -58,7 +58,7 @@ TAG JUMPING                                                  *breeze-jumping*
 
 Tag jumping implemented by Breeze is heavily inspired by vim-easymotion.
 To jump to following tags use the command *BreezeJumpF*. 
-Use *BreezeJumpB* to move to preceding tags.
+Use *BreezeJumpB* to jump to preceding tags.
 
 When you run one of the aforementioned commands, Breeze displays
 colored marks on the tags you can jump to and wait for your choice.
@@ -74,7 +74,7 @@ TAG JUMPING - SETTINGS                               *breeze-jumping-settings*
 
 *g:breeze_jump_to_angle_bracket* set this option to 1 to jump to the
 opening angle brackets of the tag you are jumping to. Set this option to 0 to
-jump to the first letter of the tag isnstead.
+jump to the first letter of the tag instead.
 
 default: `0`
 
@@ -124,7 +124,7 @@ default: ``
 TAG MATCHING                                                *breeze-matching*
 
 By default Breeze highlights the opening and closing tags of the current
-element.  To turn off this functionality you can set |g:breeze_highlight_element| 
+element.  To turn off this functionality you can set |g:breeze_hl_element| 
 to 0. However, you always have at your disposal the *BreezeHlElement* command to 
 highlight the current element. If you prefer highlighting the whole element 
 as a block you can use the *BreezeHlElementBlock* command (just like the `vat` 
