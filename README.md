@@ -28,11 +28,11 @@ the origin of the problem.
 ## Tag jumping
 ![Screenshot](extra/jump.gif "Tag jumping inspired by vim-easymotion")   
 
-As you can see this way of navigating the document is heavily inspired by vim-easimotion.
+As you can see this way of navigating the document is heavily inspired by vim-easymotion.
 To jump to following tags use the command `BreezeJumpF`. 
 Use `BreezeJumpB` to move to preceding tags.
 
-When you fire one of the aforementioned commands, Breeze display
+When you run one of the aforementioned commands, Breeze displays
 colored marks on the tags you can jump to and wait for your choice.
 Once you have moved to a tag you can easily jump back using the `CTRL+O` 
 vim mapping (:help CTRL+O). Note that when you are asked to insert the target
