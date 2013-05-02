@@ -10,9 +10,8 @@ import os
 import vim
 import time
 
-sys.path.insert(0, os.path.split(
-    vim.eval('fnameescape(globpath(&runtimepath, "' +
-             os.path.join("autoload", "breeze.py") + '"))'))[0])
+sys.path.insert(0, os.path.dirname(
+    vim.eval('globpath(&runtimepath, "autoload/breeze.py")')))
 
 import breeze.parser
 import breeze.jumper
