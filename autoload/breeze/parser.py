@@ -17,9 +17,9 @@ import breeze.utils.settings
 
 try:
     # python 3
-    from html.parser import HTMLParser
+    import html.parser as HTMLParser
 except ImportError:
-    from HTMLParser import HTMLParser
+    import HTMLParser as HTMLParser
 
 
 class Node(object):
@@ -55,15 +55,17 @@ class Node(object):
         else:
             return []
 
-class Parser(HTMLParser):
+class Parser(HTMLParser.HTMLParser):
     """Custom HTML parser."""
 
     def __init__(self):
-        HTMLParser.__init__(self)  # TODO: check with python 3
+        HTMLParser.HTMLParser.__init__(self)  # TODO: check with python 3
 
         # module reference shortcuts
         self.misc = breeze.utils.misc
 
+        self.last_known_error = None
+        self.success = False
         self.tree = Node(tag="root")
         self.stack = [self.tree]
         self.empty_tags = dict((k, True) for k in
@@ -75,8 +77,16 @@ class Parser(HTMLParser):
         """Generates a brand new tree at each call."""
         self.tree = Node(tag="root")
         self.stack = [self.tree]
-        HTMLParser.feed(self, "\n".join(buffer))
-        self.close()
+        try:
+            HTMLParser.HTMLParser.feed(self, "\n".join(buffer))
+            self.success = True
+            self.last_known_error = None
+        except HTMLParser.HTMLParseError as e:
+            self.last_known_error = dict(msg=e.msg, pos=(e.lineno, e.offset))
+            self.tree = Node(tag="root")
+            self.success = False
+        else:
+            self.close()
         self.reset()
 
     def handle_startendtag(self, tag, attrs):
@@ -113,6 +123,17 @@ class Parser(HTMLParser):
             if self.stack[-1].tag == "script" and tag != "script":
                 # ignore everything inside script tag
                 return
+
+            if tag != self.stack[-1].tag:
+                # tag mismatch
+                if any(n.tag == tag for n in self.stack):
+                    msg = "no closing tag for '<{0}>'".format(
+                        self.stack[-1].tag)
+                    pos = self.stack[-1].start
+                else:
+                    msg = "no opening tag for '</{0}>'".format(tag)
+                    pos = self.getpos()
+                raise HTMLParser.HTMLParseError(msg, pos)
 
             self.stack[-1].end = self.getpos()
             self.stack.pop(-1)
