@@ -134,6 +134,10 @@ class Jumper(object):
         self.clear_jump_marks(table)
 
         if choice:
-            pos = table[choice][0]
-            self.misc.cursor((pos[0], pos[1]+2))
+            row, col = table[choice][0]
+            if self.settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            else:
+                col += 2
+            self.misc.cursor((row, col))
 

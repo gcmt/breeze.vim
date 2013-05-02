@@ -40,6 +40,11 @@ key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
 
 ### Settings
 
+**g:breeze_jump_to_angle_bracket**: set this option to 1 to jump to the
+opening angle brackets of the tag you are jumping to. Set this option to 0 to
+jump to the first letter of the tag isnstead.
+
+
 **NOTE**: when setting the following options you can follow two ways:
 
   * use a long list of "attribute=color" separated by spaces (as you would
@@ -93,6 +98,11 @@ pressing `CTRL+O`.
 
 ### Settings
 
+**g:breeze_highlight_tag**: set this setting to 0 to disable automatic highlighting
+of the opening and closing tags of the current element.    
+*default*: `1`
+
+
 **NOTE**: when defining the following settings you have two options:
 
   * use a long list of "attribute=color" separated by spaces (as you would
@@ -100,11 +110,6 @@ pressing `CTRL+O`.
 
   * use the name of a previously defined highlight group. Note, however,
      that this does not work with highlight groups defined in your `.vimrc`.
-
-
-**g:breeze_highlight_tag**: set this setting to 0 to disable automatic highlighting
-of the opening and closing tags of the current element.    
-*default*: `1`
 
 
 **g:breeze_hl_color**: this setting defines the color that is used to

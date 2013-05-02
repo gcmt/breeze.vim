@@ -23,6 +23,9 @@ let g:breeze_loaded = 1
 let g:breeze_hl_element =
     \ get(g:, 'breeze_hl_element', 1)
 
+let g:breeze_jump_to_angle_bracket =
+    \ get(g:, 'breeze_jump_to_angle_bracket', 0)
+
 
 let g:breeze_hl_color =
     \ get(g:, 'breeze_hl_color', 'MatchParen')
