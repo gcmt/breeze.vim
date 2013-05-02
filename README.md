@@ -97,6 +97,10 @@ If the command is called within an element, this command moves the cursor to
 its opening tag. Remember that you can easily jump back to previous positions
 with `CTRL+O`.
 
+**Limitations:** At the moment current element highlighting is still inefficient for large files
+and your movements may become quite slow. So you may be better off disabling the feature for such files
+until I'll come up with a fast solution.
+
 ### Settings
 
 **g:breeze_highlight_tag**: set this setting to 0 to disable automatic highlighting
