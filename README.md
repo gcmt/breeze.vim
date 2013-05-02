@@ -2,11 +2,12 @@
 
 **v1.0**
 
-###Features###
+###Features
 * HTML navigation inspired by vim-easymotion.
 * Tag matching.
 * Current element highlighting.
 * Low level DOM navigation.
+
 
 ### Requirements
 * Vim compiled with python 2.6+
@@ -17,11 +18,17 @@ You can either extract the content of the folder into the `$HOME/.vim`
 directory or use plugin managers such as Vundle or Pathogen.
 
 
+### Houston, we have a problem
+For any functionality listed below, if it seems that something is not working correctly
+(e.g. unresponsive commands), run the `BreezeWhatsWrong` command and you will be shown 
+the origin of the problem.
+
+
 
 ## Tag jumping
 ![Screenshot](extra/jump.gif "Tag jumping inspired by vim-easymotion")   
 
-As you can see this form is heavily inspired by vim-easimotion.
+As you can see this way of navigating the document is heavily inspired by vim-easimotion.
 To jump to following tags use the command `BreezeJumpF`. 
 Use `BreezeJumpB` to move to preceding tags.
 
@@ -43,31 +50,27 @@ key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
 
 
 **g:breeze_shade_color**: this setting defines the color that is used to shade
-the background text when you are using the *jumping* functionality.
-    
-default: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
+the background text when you are using the *jumping* functionality.   
+*default*: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
 
 
 **g:breeze_shade_color_darkbg**: this setting defines the color that is used to
 shade the background text when you are using the *jumping* functionality with
 dark backgrounds (&background == dark). By default the value is equal to the
-*g:breeze_shade_color* setting.
-    
-default: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
+*g:breeze_shade_color* setting.   
+*default*: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
 
 
 **g:breeze_jumpmark_color**: this setting defines the color that is used to
-highlight jump marks when you are using the *jumping* functionality.
-   
-default: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
+highlight jump marks when you are using the *jumping* functionality.  
+*default*: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
 
 
 **g:breeze_jumpmark_color_darkbg**: this setting defines the color that is used
 to highlight jump marks when you are using the *jumping* functionality with
 dark backgrounds (&background == dark). By default the value is equal to the 
-*g:breeze_jumpmark_color* setting.
-   
-default: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
+*g:breeze_jumpmark_color* setting.     
+*default*: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
 
 
 
@@ -86,7 +89,6 @@ If the command is called in within a element, this command moves the cursor to
 its opening tag. Remember that you can easily jump back to the original position
 pressing `CTRL+O`.
 
-
 ### Settings
 
 **NOTE**: when defining the following settings you have two options:
@@ -99,35 +101,30 @@ pressing `CTRL+O`.
 
 
 **g:breeze_highlight_tag**: set this setting to 0 to disable automatic highlighting
-of the opening and closing tags of the current element.
-  
-default: `1`
+of the opening and closing tags of the current element.    
+*default*: `1`
 
 
 **g:breeze_tag_color**: this setting defines the color that is used to
-highlight opening and closing tags.
-   
-default: `MatchParen`
+highlight opening and closing tags.  
+*default:* `MatchParen`
 
 
 **g:breeze_tag_color_darkbg**: this setting defines the color that is used to
 highlight opening and closing tags with dark backgrounds (&background == dark).
-By default the value is equal to the *g:breeze_tag_color* setting.
-   
-default: `MatchParen`
+By default the value is equal to the *g:breeze_tag_color* setting.  
+*default:* `MatchParen`
 
 
 **g:breeze_tagblock_color**: this setting defines the color that is used to
-highlight the current element as a block.
-   
-default: `MatchParen`
+highlight the current element as a block.  
+*default:* `MatchParen`
 
 
 **g:breeze_tagblock_color_darkbg**: this setting defines the color that is used to
 highlight the current element as a block with dark backgrounds (&background == dark).
-By default the value is equal to the *g:breeze_tagblock_color* setting.
-  
-default: `MatchParen`
+By default the value is equal to the *g:breeze_tagblock_color* setting.  
+*default:* `MatchParen`
 
 
 
@@ -135,7 +132,7 @@ default: `MatchParen`
 ![Screenshot](extra/dom.gif "DOM navigation")   
 
 The available commands for DOM navigation cover only low level movements at the
-moment but might be useful for exploring dense html files.
+moment but might be useful for exploring dense HTML files.
 
 
 ### Commands
