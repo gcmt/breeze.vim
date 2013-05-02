@@ -177,7 +177,7 @@ class Parser(HTMLParser):
 
         def _print_tree(tree, depth, indent):
             """Internal function for printing the HTML tree."""
-            print(" " * depth + tree.tag + pos)
+            print(" " * depth + tree.tag)
             for c in tree.children:
                 _print_tree(c, depth + indent, indent)
 
