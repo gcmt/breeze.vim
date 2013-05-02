@@ -217,8 +217,7 @@ class Breeze(object):
             if row != node.start[0]:
                 target = node.start
             else:
-                attrslen = self.misc.attrs_len(node)
-                endcol = node.start[1] + len(node.tag) + attrslen + 2
+                endcol = node.start[1] + len(node.starttag_text)
                 if col < endcol:
                     target = node.end
                 else:
