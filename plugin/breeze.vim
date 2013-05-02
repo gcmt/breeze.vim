@@ -24,26 +24,21 @@ let g:breeze_hl_element =
     \ get(g:, 'breeze_hl_element', 1)
 
 
-let g:breeze_tag_color =
-    \ get(g:, 'breeze_tag_color', 'MatchParen')
-let g:breeze_tag_color_darkbg =
-    \ get(g:, 'breeze_tag_color_darkbg', 'MatchParen')
-
-let g:breeze_tagblock_color =
-    \ get(g:, 'breeze_tagblock_color', 'MatchParen')
-let g:breeze_tagblock_color_darkbg =
-    \ get(g:, 'breeze_tagblock_color_darkbg', 'MatchParen')
+let g:breeze_hl_color =
+    \ get(g:, 'breeze_hl_color', 'MatchParen')
+let g:breeze_hl_color_darkbg =
+    \ get(g:, 'breeze_hl_color_darkbg', '')
 
 
 let g:breeze_shade_color =
     \ get(g:, 'breeze_shade_color', 'gui=NONE guifg=#777777 cterm=NONE ctermfg=242')
 let g:breeze_shade_color_darkbg =
-    \ get(g:, 'breeze_shade_color_darkbg', 'gui=NONE guifg=#777777 cterm=NONE ctermfg=242')
+    \ get(g:, 'breeze_shade_color_darkbg', '')
 
 let g:breeze_jumpmark_color =
     \get(g:, 'breeze_jumpmark_color', 'gui=bold guifg=#ff6155 cterm=bold ctermfg=203')
 let g:breeze_jumpmark_color_darkbg =
-    \ get(g:, 'breeze_jumpmark_color_darkbg', 'gui=bold guifg=#ff6155 cterm=bold ctermfg=203')
+    \ get(g:, 'breeze_jumpmark_color_darkbg', '')
 
 let g:breeze_verbosity = get(g:, "breeze_verbosity", 0)
 

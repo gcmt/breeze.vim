@@ -81,10 +81,8 @@ def subst_char(buffer, v, row, col):
 
 def clear_highlighting():
     """Clears Breeze highlightings."""
-    matches = vim.eval("getmatches()")
-    g = ('BreezeJumpMark', 'BreezeShade', 'BreezeTag', 'BreezeTagBlock')
-    for match in matches:
-        if match['group'] in g:
+    for match in vim.eval("getmatches()"):
+        if match['group'] in ('BreezeJumpMark', 'BreezeShade', 'BreezeHl'):
             vim.command("call matchdelete({0})".format(match['id']))
 
 

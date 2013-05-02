@@ -93,25 +93,24 @@ class Breeze(object):
     def setup_colors(self):
         """Setups highlight groups according to the current settings."""
 
-        if vim.eval("&background") == 'light':
-            shade = self.settings.get("shade_color")
-            marks = self.settings.get("jumpmark_color")
-            match = self.settings.get("tag_color")
-            block = self.settings.get("tagblock_color")
-        else:
-            shade = self.settings.get("shade_color_darkbg")
-            marks = self.settings.get("jumpmark_color_darkbg")
-            match = self.settings.get("tag_color_darkbg")
-            block = self.settings.get("tagblock_color_darkbg")
+        shade = self.settings.get("shade_color")
+        marks = self.settings.get("jumpmark_color")
+        hl = self.settings.get("hl_color")
 
-        groups = ("BreezeShade","BreezeJumpMark","BreezeTag","BreezeTagBlock")
-        colors = (shade, marks, match, block)
-        for g, c in zip(groups, colors):
+        if vim.eval("&background") == 'dark':
+            s = self.settings.get("shade_color_darkbg")
+            shade = s if s else shade
+            m = self.settings.get("jumpmark_color_darkbg")
+            marks = m if m else marks
+            h = self.settings.get("hl_color_darkbg")
+            hl = h if h else hl
+
+        for g, c in (("Shade", shade), ("JumpMark", marks), ("Hl", hl)):
             if "=" not in c:
                 # a group is found
-                vim.command("hi link {0} {1}".format(g, c))
+                vim.command("hi link Breeze{0} {1}".format(g, c))
             else:
-                vim.command("hi {0} {1}".format(g, c))
+                vim.command("hi Breeze{0} {1}".format(g, c))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -130,8 +129,8 @@ class Breeze(object):
     @parse_current_buffer
     def highlight_curr_element(self):
         """Highlights opening and closing tags of the current element."""
+        group = "BreezeHl"
         self.misc.clear_highlighting()
-        group = "BreezeTag"
         node = self.parser.get_current_node()
         if node:
             line, startcol = node.start[0], node.start[1]+1
@@ -151,16 +150,15 @@ class Breeze(object):
             self.misc.echov("cannot locate the current node")
 
     @parse_current_buffer
-    def highlight_element_block(self, node=None, group=None):
+    def highlight_element_block(self, node=None):
         """Highlights the current element.
 
         This works exactly as the 'vat' motion.
         """
-        if group is None:
-            group = "BreezeTagBlock"
+        group = "BreezeHl"
+        self.misc.clear_highlighting()
         if node is None:
             node = self.parser.get_current_node()
-
         if node:
             if (node.tag not in self.empty_tags
                 and node.start[0] != node.end[0]):
