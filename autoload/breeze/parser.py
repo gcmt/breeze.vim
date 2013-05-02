@@ -218,3 +218,12 @@ class Parser(HTMLParser.HTMLParser):
             return _flatten(self.tree.children[0])
         else:
             return []
+
+    def whats_wrong(self):
+        """If something went wrong during the last parse,
+        tell the user about it."""
+        if self.last_known_error is not None:
+            self.misc.echom("Error found at {pos}, type: {msg}".format(
+                **self.last_known_error))
+        else:
+            self.misc.echom("All should be fine!")

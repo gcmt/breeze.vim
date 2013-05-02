@@ -81,6 +81,10 @@ fu! breeze#PrintDom()
     py breeze_plugin.print_dom()
 endfu
 
+fu! breeze#WhatsWrong()
+    py breeze_plugin.whats_wrong()
+endfu
+
 " }}}
 
 " }}}

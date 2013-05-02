@@ -69,6 +69,7 @@ command! BreezeParent call breeze#Parent()
 
 " misc
 command! BreezePrintDom call breeze#PrintDom()
+command! BreezeWhatsWrong call breeze#WhatsWrong()
 
 " }}}
 

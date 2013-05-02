@@ -316,3 +316,8 @@ class Breeze(object):
     def print_dom(self):
         """Prints the DOM tree."""
         self.parser.print_dom_tree()
+
+    def whats_wrong(self):
+        """If something went wrong during the last parse,
+        tell the user about it."""
+        self.parser.whats_wrong()
