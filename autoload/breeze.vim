@@ -13,13 +13,10 @@
 fu! breeze#init()
     let py_module = fnameescape(globpath(&runtimepath, 'autoload/breeze.py'))
     exe 'pyfile ' . py_module
-echo "initialized 1"
     python breeze_plugin = Breeze()
-echo "initialized 2"
 endfu
 
 call breeze#init()
-echo "initialized 3"
 let g:breeze_initialized = 1
 
 " }}}
