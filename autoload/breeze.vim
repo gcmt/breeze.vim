@@ -95,7 +95,7 @@ augroup breeze_plugin
 
     au!
     au Colorscheme *.html,*.htm,*.xhtml,*.xml py breeze_plugin.setup_colors()
-    au BufEnter,BufLeave,CursorMoved *.html,*.htm,*.xhtml,*.xml py breeze.utils.misc.clear_highlighting()
+    au BufEnter,BufLeave,CursorMoved,CursorMovedI *.html,*.htm,*.xhtml,*.xml py breeze.utils.misc.clear_highlighting()
 
     " update the cache
     au BufReadPost,BufWritePost,BufEnter *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
