@@ -135,9 +135,7 @@ class Jumper(object):
 
         if choice:
             row, col = table[choice][0]
-            if self.settings.get("jump_to_angle_bracket", bool):
+            if not self.settings.get("jump_to_angle_bracket", bool):
                 col += 1
-            else:
-                col += 2
             self.misc.cursor((row, col))
 
