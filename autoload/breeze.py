@@ -114,7 +114,6 @@ class Breeze(object):
     def highlight_curr_element(self):
         """Highlights opening and closing tags of the current element."""
         group = "BreezeHl"
-        self.misc.clear_highlighting()
         node = self.parser.get_current_node()
         if node:
             line, startcol = node.start[0], node.start[1]+1
