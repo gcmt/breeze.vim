@@ -22,17 +22,12 @@ def echov(msg):
         echom(msg)
 
 
-def cursor(target=None, kj=False):
-    """Moves the cursor.
-
-    If the kj parameter is set to True, then the command behaves as following:
-    :help keepjumps -> Moving around in {command} does not change the '', '.
-                       and '^ marks, the jumplist or the changelist...
-    """
+def cursor(target=None):
+    """Moves the cursor or returs the current cursor position."""
     if not target:
         return vim.current.window.cursor
-    vim.command("{0}call cursor({1}, {2})".format(
-        "keepjumps " if kj else "", target[0], target[1]))
+    else:
+        vim.current.window.cursor = target
 
 
 def window_bundaries():
