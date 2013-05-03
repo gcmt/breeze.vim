@@ -25,11 +25,10 @@ except ImportError:
 class Node(object):
     """Node definition."""
 
-    def __init__(self, tag="", attrs=None, starttag_text="",
+    def __init__(self, tag="", starttag_text="",
                  parent=None, start=None, end=None):
         self.tag = tag          # tag name
         self.starttag_text = starttag_text # raw starttag text
-        self.attrs = attrs      # a dictionary {attr: value, ..}
         self.start = start      # a tuple (row, col)
         self.end = end          # a tuple (row, col)
         self.parent = parent    # a Node or None (if root)
@@ -43,17 +42,6 @@ class Node(object):
         return "<{0} start={1} end={2}>".format(
             self.tag, self.start, self.end)
 
-    def id(self):
-        """Returns the id attribute."""
-        return self.attrs.get("id", [])
-
-    def classes(self):
-        """Returns the class attribute."""
-        classes = self.attrs.get("class")
-        if classes:
-            return classes.split()
-        else:
-            return []
 
 class Parser(HTMLParser.HTMLParser):
     """Custom HTML parser."""
@@ -72,6 +60,11 @@ class Parser(HTMLParser.HTMLParser):
             ["br", "base", "hr", "meta", "link", "base", "link",
             "source", "meta", "img", "embed", "param", "area", "col", "input",
             "command", "keygen", "track", "wbr"])
+
+    #def new_id(self):
+        #"""Generates a nes node id."""
+        #self.last_id += 1
+        #return self.last_id
 
     def feed(self, buffer):
         """Generates a brand new tree at each call."""
@@ -108,8 +101,8 @@ class Parser(HTMLParser.HTMLParser):
             return
 
         if self.stack:
-            node = Node(tag, dict(attrs), self.get_starttag_text(),
-                        self.stack[-1], self.getpos())
+            node = Node(tag, self.get_starttag_text(), self.stack[-1],
+                        self.getpos())
             self.stack[-1].children.append(node)
             self.stack.append(node)
 
@@ -142,11 +135,21 @@ class Parser(HTMLParser.HTMLParser):
         """Searches for the closest element that encloses our current cursor
         position."""
         if self.tree.children:
+            # if the cursor is in the lower half of the document, we perform
+            # a reversed depth first search. This ensures lower search times
+            # at the beginning and at the end of the html document
+            row, col = self.misc.cursor()
+            if row < len(vim.current.buffer) / 2:
+                reverse = False
+            else:
+                reverse = True
+
             node, depth = self._closest_node(
-                self.tree.children[0], 0, None, -1, self.misc.cursor())
+                self.tree.children[0], reverse, 0, None, -1, (row, col))
             return node
 
-    def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
+    def _closest_node(self, tree, reverse, depth,
+                        closest_node, closest_depth, pos):
         """Finds the closest element that encloses our current cursor
         position."""
         row, col = pos
@@ -177,9 +180,11 @@ class Parser(HTMLParser.HTMLParser):
             closest_depth = depth
 
         # check recursively for the closest element
-        for c in tree.children:
+        # if 'reverse' is true the depth first search starts in the reverse
+        # order.
+        for c in (reversed(tree.children) if reverse else tree.children):
             n, d, = self._closest_node(
-                        c, depth + 1, closest_node, closest_depth, pos)
+                        c, reverse, depth + 1, closest_node, closest_depth, pos)
 
             if d > closest_depth:
                 closest_node = n
@@ -194,7 +199,7 @@ class Parser(HTMLParser.HTMLParser):
         return closest_node, closest_depth
 
     def print_dom_tree(self, indent=2):
-        """Print the parsed DOM tree."""
+        """Prints the parsed DOM tree."""
 
         def _print_tree(tree, depth, indent):
             """Internal function for printing the HTML tree."""
