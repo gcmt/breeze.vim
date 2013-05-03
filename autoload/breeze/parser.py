@@ -78,9 +78,8 @@ class Parser(HTMLParser.HTMLParser):
             self.last_known_error = dict(msg=e.msg, pos=(e.lineno, e.offset))
             self.tree = Node(tag="root")
             self.success = False
-        else:
-            self.close()
-        self.reset()
+        finally:
+            self.reset()
 
     def handle_startendtag(self, tag, attrs):
         """Handles empty tags."""
@@ -152,6 +151,14 @@ class Parser(HTMLParser.HTMLParser):
                         closest_node, closest_depth, pos):
         """Finds the closest element that encloses our current cursor
         position."""
+        if not tree.start or not tree.end:
+            msg = "malformed tag found"
+            if not tree.start:
+                self.last_known_error = dict(msg=msg, pos=tree.end)
+            if not tree.end:
+                self.last_known_error = dict(msg=msg, pos=tree.start)
+            return (None, -1)
+
         row, col = pos
         startrow, startcol = tree.start[0], tree.start[1]
         endrow = tree.end[0]
@@ -183,7 +190,7 @@ class Parser(HTMLParser.HTMLParser):
         # if 'reverse' is true the depth first search starts in the reverse
         # order.
         for c in (reversed(tree.children) if reverse else tree.children):
-            n, d, = self._closest_node(
+            n, d = self._closest_node(
                         c, reverse, depth + 1, closest_node, closest_depth, pos)
 
             if d > closest_depth:
