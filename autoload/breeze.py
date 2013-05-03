@@ -42,21 +42,6 @@ class Breeze(object):
              "img", "embed", "param", "area", "col", "input", "command",
              "keygen", "track", "wbr"])
 
-        # profiling stuff
-        self.calls = 0
-        self.sum = 0
-        self.average = 0
-
-    def profile(f):
-        def wrapper(self, *args, **kwargs):
-            start = time.clock()
-            r = f(self, *args, **kwargs)
-            self.sum += (time.clock() - start)
-            self.calls += 1
-            self.average = self.sum / float(self.calls)
-            return r
-        return wrapper
-
     def parse_current_buffer(f):
         """This method exists in order to provide some primitive form of
         caching.
