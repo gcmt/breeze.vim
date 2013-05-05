@@ -55,6 +55,15 @@ def highlight(group, patt, priority=10):
     """Wraps the matchadd() vim function."""
     vim.eval("matchadd('{0}', '{1}', {2})".format(
         group, patt, priority))
+def clear_hl():
+    """Clears Breeze highlightings.
+
+    For performance reasons the group BreezeHl handled separately
+    with the clear_hl_by_ids function.
+    """
+    for match in vim.eval("getmatches()"):
+        if match['group'] in ('BreezeJumpMark', 'BreezeShade'):
+            vim.command("call matchdelete({0})".format(match['id']))
 
 
 def subst_char(buffer, v, row, col):
@@ -74,10 +83,5 @@ def subst_char(buffer, v, row, col):
     return old
 
 
-def clear_highlighting():
-    """Clears Breeze highlightings."""
-    for match in vim.eval("getmatches()"):
-        if match['group'] in ('BreezeJumpMark', 'BreezeShade', 'BreezeHl'):
-            vim.command("call matchdelete({0})".format(match['id']))
 
 

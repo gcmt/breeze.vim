@@ -56,7 +56,7 @@ class Breeze(object):
                     self.cache = self.parser.tree
                     self.refresh_cache = False
                 else:
-                    self.misc.clear_highlighting()
+                    self.misc.clear_hl()
                     self.refresh_cache = True
                     return
             else:

@@ -105,7 +105,6 @@ class Jumper(object):
 
     def clear_jump_marks(self, table):
         """Clear jump marks."""
-        self.misc.clear_highlighting()
         vim.command("try|undojoin|catch|endtry")
         # restore characters
         buf = vim.current.buffer
@@ -131,6 +130,7 @@ class Jumper(object):
             if choice is None:
                 break
 
+        self.misc.clear_hl()
         self.clear_jump_marks(table)
 
         if choice:
