@@ -61,11 +61,6 @@ class Parser(HTMLParser.HTMLParser):
             "source", "meta", "img", "embed", "param", "area", "col", "input",
             "command", "keygen", "track", "wbr"])
 
-    #def new_id(self):
-        #"""Generates a nes node id."""
-        #self.last_id += 1
-        #return self.last_id
-
     def feed(self, buffer):
         """Generates a brand new tree at each call."""
         self.tree = Node(tag="root")
@@ -134,21 +129,11 @@ class Parser(HTMLParser.HTMLParser):
         """Searches for the closest element that encloses our current cursor
         position."""
         if self.tree.children:
-            # if the cursor is in the lower half of the document, we perform
-            # a reversed depth first search. This ensures lower search times
-            # at the beginning and at the end of the html document
-            row, col = self.misc.cursor()
-            if row < len(vim.current.buffer) / 2:
-                reverse = False
-            else:
-                reverse = True
-
             node, depth = self._closest_node(
-                self.tree.children[0], reverse, 0, None, -1, (row, col))
+                self.tree.children[0], 0, None, -1, self.misc.cursor())
             return node
 
-    def _closest_node(self, tree, reverse, depth,
-                        closest_node, closest_depth, pos):
+    def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
         """Finds the closest element that encloses our current cursor
         position."""
         if not tree.start or not tree.end:
@@ -180,30 +165,45 @@ class Parser(HTMLParser.HTMLParser):
         else:
             cond = False
 
-        # if cond is True the element encloses our position and we temporarily
-        # assume that this is the closest element relative to our position
+        # if cond is True the current element (tree) eclose our position. Now
+        # we assume this is the closest node that enclose our position.
         if cond:
+
             closest_node = tree
             closest_depth = depth
 
-        # check recursively for the closest element
-        # if 'reverse' is true the depth first search starts in the reverse
-        # order.
-        for c in (reversed(tree.children) if reverse else tree.children):
-            n, d = self._closest_node(
-                        c, reverse, depth + 1, closest_node, closest_depth, pos)
-
-            if d > closest_depth:
-                closest_node = n
-                closest_depth = d
-
-            if depth < closest_depth:
-                # we have already found the closest node and we are going up
-                # the tree structure (depth < closest_depth). There is no
-                # need to continue the search
+            if not tree.children:
                 return closest_node, closest_depth
 
-        return closest_node, closest_depth
+            # if the current position is closest to the end of the current
+            # enclosing tag, start iterating its children from the last element,
+            # and vice-versa. This little piece of code just aims to improve
+            # performances, nothing else.
+            if row - tree.start[0] > tree.end[0] - row:
+                rev = True
+            else:
+                rev = False
+
+            for child in (reversed(tree.children) if rev else tree.children):
+                n, d = self._closest_node(
+                    child, depth + 1, closest_node, closest_depth, pos)
+
+                if d > closest_depth:
+                    # a child of tree node is closest to the current position.
+                    closest_node = n
+                    closest_depth = d
+
+                if depth < closest_depth:
+                    # we have already found the closest node and we are going up
+                    # the tree structure (depth < closest_depth). There is no
+                    # need to continue the search
+                    return closest_node, closest_depth
+
+            return closest_node, closest_depth
+
+        else:
+            # untouched
+            return closest_node, closest_depth
 
     def print_dom_tree(self, indent=2):
         """Prints the parsed DOM tree."""
