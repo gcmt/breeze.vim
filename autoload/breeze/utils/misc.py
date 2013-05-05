@@ -53,8 +53,16 @@ def window_bundaries():
 
 def highlight(group, patt, priority=10):
     """Wraps the matchadd() vim function."""
-    vim.eval("matchadd('{0}', '{1}', {2})".format(
-        group, patt, priority))
+    return vim.eval("matchadd('{0}', '{1}', {2})".format(
+                    group, patt, priority))
+
+
+def clear_hl_by_ids(ids):
+    """Clears Breeze highlightings with id in 'ids'."""
+    for id in ids:
+        vim.command("call matchdelete({0})".format(id))
+
+
 def clear_hl():
     """Clears Breeze highlightings.
 

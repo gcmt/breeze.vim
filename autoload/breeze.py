@@ -31,6 +31,7 @@ class Breeze(object):
         self.jumper = breeze.jumper.Jumper(self)
 
         self.setup_colors()
+        self.last_matches_ids = []
 
         # caching stuff
         self.refresh_cache = True
@@ -38,7 +39,7 @@ class Breeze(object):
 
         # empty tags
         self.empty_tags = dict((k, True) for k in
-            ["br", "base", "hr", "meta", "link", "base", "source", "meta",
+            ["br", "base", "hr", "meta", "link", "base", "source",
              "img", "embed", "param", "area", "col", "input", "command",
              "keygen", "track", "wbr"])
 
@@ -110,17 +111,22 @@ class Breeze(object):
         jumps to the selected tag."""
         self.jumper.jump(backward=True)
 
+    def clear_element_hl(self):
+        self.misc.clear_hl_by_ids(self.last_matches_ids)
+        self.last_matches_ids = []
+
     @parse_current_buffer
     def highlight_curr_element(self):
         """Highlights opening and closing tags of the current element."""
-        group = "BreezeHl"
+        self.clear_element_hl()
         node = self.parser.get_current_node()
         if node:
             line, startcol = node.start[0], node.start[1]+1
             endcol = startcol + len(node.tag) + 1
             patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
                 line, startcol, endcol)
-            self.misc.highlight(group, patt)
+            self.last_matches_ids.append(
+                self.misc.highlight("BreezeHl", patt))
 
             if node.tag not in self.empty_tags:
 
@@ -128,7 +134,8 @@ class Breeze(object):
                 endcol = startcol + len(node.tag) + 2
                 patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
                     line, startcol, endcol)
-                self.misc.highlight(group, patt)
+                self.last_matches_ids.append(
+                    self.misc.highlight("BreezeHl", patt))
         else:
             self.misc.echov("cannot locate the current node")
 
@@ -138,8 +145,9 @@ class Breeze(object):
 
         This works exactly as the 'vat' motion.
         """
-        group = "BreezeHl"
-        self.misc.clear_highlighting()
+        self.misc.clear_hl_by_ids(self.last_matches_ids)
+        self.last_matches_ids = []
+
         if node is None:
             node = self.parser.get_current_node()
         if node:
@@ -151,18 +159,21 @@ class Breeze(object):
                 endcol = startcol + len(node.tag) + 1
                 patt = "\\%{0}l\\%>{1}c".format(
                     sline, startcol, endcol)
-                self.misc.highlight(group, patt)
+                self.last_matches_ids.append(
+                    self.misc.highlight("BreezeHl", patt))
 
                 # highlight end line
                 eline, startcol = node.end[0], node.end[1]+1
                 endcol = startcol + len(node.tag) + 3
                 closing = "\\%{0}l\\%<{1}c".format(
                     eline, endcol)
-                self.misc.highlight(group, closing)
+                self.last_matches_ids.append(
+                    self.misc.highlight("BreezeHl", patt))
 
                 # highlight lines between start and end tag
                 patt = "\\%>{0}l\\%<{1}l".format(sline, eline)
-                self.misc.highlight(group, patt)
+                self.last_matches_ids.append(
+                    self.misc.highlight("BreezeHl", patt))
 
             else:
                 if node.tag in self.empty_tags:
@@ -171,14 +182,16 @@ class Breeze(object):
                     endcol = startcol + len(node.tag) + 1
                     patt = "\\%{0}l\\%>{1}c".format(
                         sline, startcol, endcol)
-                    self.misc.highlight(group, patt)
+                    self.last_matches_ids.append(
+                        self.misc.highlight("BreezeHl", patt))
                 else:
                     # highlight tag on a single line
                     line, startcol = node.start[0], node.start[1]
                     endcol = node.end[1] + len(node.tag) + 4
                     patt = "\\%{0}l\\%>{1}c\\%<{2}c".format(
                         line, startcol, endcol)
-                    self.misc.highlight(group, patt)
+                    self.last_matches_ids.append(
+                        self.misc.highlight("BreezeHl", patt))
         else:
             self.misc.echov("cannot locate the current node")
 
