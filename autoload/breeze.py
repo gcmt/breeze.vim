@@ -217,7 +217,10 @@ class Breeze(object):
                 else:
                     target = node.start
 
-            self.misc.cursor((target[0], target[1] + 2))
+            row, col = target
+            if not self.settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            self.misc.cursor((row, col))
 
         else:
             self.misc.echov("cannot locate the current node")
@@ -228,13 +231,15 @@ class Breeze(object):
         """Moves the cursor to the next sibling node."""
         node = self.parser.get_current_node()
         if node:
-            if node.parent.tag != "root":
+            if node.parent:
                 ch = node.parent.children
                 for i, c in enumerate(ch):
                     if c.start == node.start and c.end == node.end:
                         if i + 1 < len(ch):
-                            target = ch[i+1].start
-                            self.misc.cursor((target[0], target[1]+2))
+                            row, col = ch[i+1].start
+                            if not self.settings.get("jump_to_angle_bracket", bool):
+                                col += 1
+                            self.misc.cursor((row, col))
                         else:
                             self.misc.echom("no siblings found")
             else:
@@ -248,13 +253,15 @@ class Breeze(object):
         """Moves the cursor to the previous sibling node."""
         node = self.parser.get_current_node()
         if node:
-            if node.parent.tag != "root":
+            if node.parent:
                 ch = node.parent.children
                 for i, c in enumerate(ch):
                     if c.start == node.start and c.end == node.end:
                         if i - 1 >= 0:
-                            target = ch[i-1].start
-                            self.misc.cursor((target[0], target[1]+2))
+                            row, col = ch[i-1].start
+                            if not self.settings.get("jump_to_angle_bracket", bool):
+                                col += 1
+                            self.misc.cursor((row, col))
                         else:
                             self.misc.echom("no siblings found")
             else:
@@ -269,8 +276,10 @@ class Breeze(object):
         node = self.parser.get_current_node()
         if node:
             if node.children:
-                target = node.children[0].start
-                self.misc.cursor((target[0], target[1]+2))
+                row, col = node.children[0].start
+                if not self.settings.get("jump_to_angle_bracket", bool):
+                    col += 1
+                self.misc.cursor((row, col))
             else:
                 self.misc.echom("no children found")
         else:
@@ -283,8 +292,10 @@ class Breeze(object):
         node = self.parser.get_current_node()
         if node:
             if node.children:
-                target = node.children[-1].start
-                self.misc.cursor((target[0], target[1]+2))
+                row, col = node.children[-1].start
+                if not self.settings.get("jump_to_angle_bracket", bool):
+                    col += 1
+                self.misc.cursor((row, col))
             else:
                 self.misc.echom("no children found")
         else:
@@ -297,8 +308,10 @@ class Breeze(object):
         node = self.parser.get_current_node()
         if node:
             if node.parent.tag != "root":
-                target = node.parent.start
-                self.misc.cursor((target[0], target[1]+2))
+                row, col = node.parent.start
+                if not self.settings.get("jump_to_angle_bracket", bool):
+                    col += 1
+                self.misc.cursor((row, col))
             else:
                 self.misc.echom("no parent found")
         else:
