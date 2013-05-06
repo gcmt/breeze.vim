@@ -61,6 +61,8 @@ command! BreezeHlElementBlock call breeze#HighlightElementBlock()
 " dom navigation
 command! BreezeNextSibling call breeze#NextSibling()
 command! BreezePrevSibling call breeze#PrevSibling()
+command! BreezeFirstSibling call breeze#FirstSibling()
+command! BreezeLastSibling call breeze#LastSibling()
 command! BreezeFirstChild call breeze#FirstChild()
 command! BreezeLastChild call breeze#LastChild()
 command! BreezeParent call breeze#Parent()

@@ -271,6 +271,38 @@ class Breeze(object):
 
     @remember_curr_pos
     @parse_current_buffer
+    def goto_first_sibling(self):
+        """Moves the cursor to the first sibling node."""
+        node = self.parser.get_current_node()
+        if node:
+            if node.parent:
+                row, col = node.parent.children[0].start
+                if not self.settings.get("jump_to_angle_bracket", bool):
+                    col += 1
+                self.misc.cursor((row, col))
+            else:
+                self.misc.echov("no siblings found")
+        else:
+            self.misc.echov("cannot locate the current node")
+
+    @remember_curr_pos
+    @parse_current_buffer
+    def goto_last_sibling(self):
+        """Moves the cursor to the last sibling node."""
+        node = self.parser.get_current_node()
+        if node:
+            if node.parent:
+                row, col = node.parent.children[-1].start
+                if not self.settings.get("jump_to_angle_bracket", bool):
+                    col += 1
+                self.misc.cursor((row, col))
+            else:
+                self.misc.echov("no siblings found")
+        else:
+            self.misc.echov("cannot locate the current node")
+
+    @remember_curr_pos
+    @parse_current_buffer
     def goto_first_child(self):
         """Moves the cursor to the first child of the current node."""
         node = self.parser.get_current_node()

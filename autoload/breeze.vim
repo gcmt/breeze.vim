@@ -61,6 +61,14 @@ fu! breeze#PrevSibling()
     py breeze_plugin.goto_prev_sibling()
 endfu
 
+fu! breeze#FirstSibling()
+    py breeze_plugin.goto_first_sibling()
+endfu
+
+fu! breeze#LastSibling()
+    py breeze_plugin.goto_last_sibling()
+endfu
+
 fu! breeze#FirstChild()
     py breeze_plugin.goto_first_child()
 endfu
