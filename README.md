@@ -144,6 +144,12 @@ Moves the cursor to the next sibling node.
 **BreezePrevSibling**     
 Moves the cursor to the previous sibling node.
 
+**BreezeFirstSibling**     
+Moves the cursor to the first sibling node.
+
+**BreezeLastSibling**     
+Moves the cursor to the last sibling node.
+
 **BreezeFirstChild**   
 Moves the cursor to the first child node.
 
