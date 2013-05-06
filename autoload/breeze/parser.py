@@ -231,11 +231,10 @@ class Parser(HTMLParser.HTMLParser):
         else:
             return []
 
-    def whats_wrong(self):
-        """If something went wrong during the last parse,
-        tell the user about it."""
+    def get_error(self):
+        """Returns the last known error."""
         if self.last_known_error is not None:
-            self.misc.echom("Error found at {pos}, type: {msg}".format(
-                **self.last_known_error))
+            return "Error found at {pos}, type: {msg}".format(
+                        **self.last_known_error)
         else:
-            self.misc.echom("All should be fine!")
+            return "All should be fine!"

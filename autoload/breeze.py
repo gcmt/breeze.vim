@@ -325,4 +325,4 @@ class Breeze(object):
     def whats_wrong(self):
         """If something went wrong during the last parse,
         tell the user about it."""
-        self.parser.whats_wrong()
+        self.misc.echom(self.parser.get_error())
