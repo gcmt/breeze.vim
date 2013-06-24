@@ -4,8 +4,8 @@
 " Mantainer: Giacomo Comitti (https://github.com/gcmt)
 " Url: https://github.com/gcmt/breeze.vim
 " License: MIT
-" Version: 1.0
-" Last Changed: 5/1/2013
+" Version: 1.0.1
+" Last Changed: 6/24/2013
 " ============================================================================
 
 " Init {{{

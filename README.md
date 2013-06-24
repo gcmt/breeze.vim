@@ -1,6 +1,6 @@
 # breeze.vim
 
-**v1.0**
+**v1.0.1**
 
 ###Features
 * HTML navigation inspired by vim-easymotion.
@@ -11,7 +11,7 @@
 
 ### Requirements
 * Vim compiled with python 2.6+
-* Unix, Mac OSX (untested on Windows)
+* Unix, Mac OS X (untested on Windows)
 
 
 ### Installation

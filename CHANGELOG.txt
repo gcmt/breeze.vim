@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+v1.0.1
+
+	- minor fixes.
+
 v1.0
 
 	- first stable release.      
