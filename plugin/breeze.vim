@@ -10,8 +10,7 @@
 
 " Init {{{
 
-if exists("g:breeze_loaded") || &cp || exists("g:breeze_disable") ||
-    \ !has('python')
+if exists("g:breeze_loaded") || &cp || exists("g:breeze_disable") || !has('python')
     finish
 endif
 let g:breeze_loaded = 1
@@ -77,8 +76,7 @@ command! BreezeWhatsWrong call breeze#WhatsWrong()
 
 augroup breeze_init
     au!
-    au BufWinEnter *.html,*.htm,*.xhtml,*.xml
-        \ if !exists("g:breeze_initialized") | call breeze#init() | endif
+    au BufWinEnter *.html,*.htm,*.xhtml,*.xml if !exists("g:breeze_initialized") | call breeze#init() | endif
 augroup END
 
 " }}}
