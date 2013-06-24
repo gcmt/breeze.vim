@@ -61,8 +61,6 @@ class Input:
             elif 1 <= nr <= 26:
                 self.CTRL = True
                 self.CHAR = vim.eval("nr2char({0})".format(nr + 96))
-                if self.CHAR == 'c':
-                    self.INTERRUPT = True
             else:
                 self.CHAR = vim.eval("nr2char({0})".format(nr))
 
