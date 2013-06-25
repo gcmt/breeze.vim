@@ -128,10 +128,11 @@ class Parser(HTMLParser.HTMLParser):
     def get_current_node(self):
         """Searches for the closest element that encloses our current cursor
         position."""
-        if self.tree.children:
+        for c in self.tree.children:
             node, depth = self._closest_node(
-                self.tree.children[0], 0, None, -1, self.misc.cursor())
-            return node
+                    c, 0, None, -1, self.misc.cursor())
+            if node != None:
+                return node
 
     def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
         """Finds the closest element that encloses our current cursor
@@ -214,8 +215,8 @@ class Parser(HTMLParser.HTMLParser):
             for c in tree.children:
                 _print_tree(c, depth + indent, indent)
 
-        if self.tree.children:
-            _print_tree(self.tree.children[0], 0, indent)
+        for c in self.tree.children:
+            _print_tree(c, 0, indent)
 
     def all_nodes(self):
         """Returns all DOM nodes as a generator."""
