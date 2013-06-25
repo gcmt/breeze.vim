@@ -8,7 +8,7 @@ This module defines the main class of the Breeze plugin.
 
 import os
 import vim
-import time
+import sys
 
 sys.path.insert(0, os.path.dirname(
     vim.eval('globpath(&runtimepath, "autoload/breeze.py")')))
