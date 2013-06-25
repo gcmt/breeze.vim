@@ -102,18 +102,18 @@ endfu
 augroup breeze_plugin
 
     au!
-    au Colorscheme *.html,*.htm,*.xhtml,*.xml py breeze_plugin.setup_colors()
-    au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze_plugin.clear_element_hl()
+    exe 'au Colorscheme '.g:breeze_highlight_filename_patterns.' py breeze_plugin.setup_colors()'
+    exe 'au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze_plugin.clear_element_hl()'
 
     " FIX: at this events the plugin should rebuild the cache,
     " not just tell that the cache need to be updated
-    au BufReadPost,BufWritePost,BufEnter *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
-    au CursorHold,CursorHoldI *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
-    au InsertEnter,InsertLeave *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
-    au BufWritePost *.html,*.htm,*.xhtml,*.xml py breeze_plugin.refresh_cache=True
+    exe 'au BufReadPost,BufWritePost,BufEnter '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
+    exe 'au CursorHold,CursorHoldI '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
+    exe 'au InsertEnter,InsertLeave '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
+    exe 'au BufWritePost '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
 
     if g:breeze_hl_element
-        au CursorMoved *.html,*.htm,*.xhtml,*.xml py breeze_plugin.highlight_curr_element()
+        exe 'au CursorMoved '.g:breeze_highlight_filename_patterns.' py breeze_plugin.highlight_curr_element()'
         au InsertEnter *.* py breeze_plugin.clear_element_hl()
     endif
 

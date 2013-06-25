@@ -142,6 +142,13 @@ pressing `CTRL+O`.
 ==============================================================================
 TAG MATCHING - SETTINGS                            *breeze-matching-settings*
 
+*g:breeze_highlight_filename_patterns* set this setting to a comma separated list
+of file patterns that will have tag highlighting. "*.html,*.htm,*.xhtml,*.xml"
+files will always have highlighting.
+
+example: >
+  let g:breeze_highlight_filename_patterns = '*.jsp,*.erb,*.asp,*.aspx'
+<
 
 *g:breeze_highlight_tag* set this setting to 0 to disable automatic
 highlighting of the opening and closing tags of the current element.    
