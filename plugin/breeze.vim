@@ -74,9 +74,15 @@ command! BreezeWhatsWrong call breeze#WhatsWrong()
 
 " autocommands {{{
 
+if exists("g:breeze_highlight_filename_patterns")
+    let g:breeze_highlight_filename_patterns = "*.html,*.htm,*.xhtml,*.xml,".g:breeze_highlight_filename_patterns
+else
+    let g:breeze_highlight_filename_patterns = "*.html,*.htm,*.xhtml,*.xml"
+endif
+
 augroup breeze_init
     au!
-    au BufWinEnter *.html,*.htm,*.xhtml,*.xml if !exists("g:breeze_initialized") | call breeze#init() | endif
+    exe 'au BufWinEnter '.g:breeze_highlight_filename_patterns.' if !exists("g:breeze_initialized") | call breeze#init() | endif'
 augroup END
 
 " }}}
