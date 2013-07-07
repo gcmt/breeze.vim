@@ -126,12 +126,12 @@ class Parser(HTMLParser.HTMLParser):
             self.stack.pop(-1)
 
     def get_current_node(self):
-        """Searches for the closest element that encloses our current cursor
-        position."""
+        """Return the current element (the one that enclose our cursor
+        position)."""
         for c in self.tree.children:
             node, depth = self._closest_node(
                     c, 0, None, -1, self.misc.cursor())
-            if node != None:
+            if node:
                 return node
 
     def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
