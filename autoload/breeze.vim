@@ -103,7 +103,7 @@ augroup breeze_plugin
 
     au!
     exe 'au Colorscheme '.g:breeze_highlight_filename_patterns.' py breeze_plugin.setup_colors()'
-    exe 'au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze_plugin.clear_element_hl()'
+    exe 'au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze.utils.misc.clear_hl(["BreezeHl"])'
 
     " FIX: at this events the plugin should rebuild the cache,
     " not just tell that the cache need to be updated
@@ -114,7 +114,7 @@ augroup breeze_plugin
 
     if g:breeze_hl_element
         exe 'au CursorMoved '.g:breeze_highlight_filename_patterns.' py breeze_plugin.highlight_curr_element()'
-        au InsertEnter *.* py breeze_plugin.clear_element_hl()
+        au InsertEnter *.* py breeze.utils.misc.clear_hl(["BreezeHl"])
     endif
 
 augroup END
