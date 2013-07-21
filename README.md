@@ -65,7 +65,7 @@ shade the background text when you are using the *jumping* functionality with
 dark backgrounds (&background == dark). 
 If the value is an empty string the *g:breeze_shade_color* setting is used for dark backgrounds.  
 
-*default*: ``
+*default*: `''`
 
 
 **g:breeze_jumpmark_color**: this setting defines the color that is used to
@@ -78,7 +78,7 @@ to highlight jump marks when you are using the *jumping* functionality with
 dark backgrounds (&background == dark). 
 If the value is an empty string the *g:breeze_jumpmark_color* setting is used for dark backgrounds.  
 
-*default*: ``
+*default*: `''`
 
 
 
@@ -125,7 +125,7 @@ highlight opening and closing tags.
 **g:breeze_hl_color_darkbg**: this setting defines the color that is used to
 highlight opening and closing tags with dark backgrounds (&background == dark).
 If the value is an empty string the *g:breeze_hl_color* setting is used for dark backgrounds.  
-*default:* ``
+*default:* `''`
 
 
 
