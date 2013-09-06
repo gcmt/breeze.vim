@@ -48,36 +48,34 @@ class Jumper(object):
         vim.command("setlocal modifiable noreadonly")
 
         top, bot = self.misc.window_bundaries()
-        ps = [node.start for node in self.plug.parser.all_nodes()
-              if node.start[0] >= top and node.start[0] <= bot]
+        nodes = [node for node in self.plug.parser.all_nodes()
+                 if node.start[0] >= top and node.start[0] <= bot]
 
         vim.command("try|undojoin|catch|endtry")
 
         curr_pos = self.misc.cursor()
-        for pos in ps:
+        curr_row, curr_col = curr_pos[0]-1, curr_pos[1]
 
+        for node in nodes:
+
+            tag_row, tag_col = node.start[0]-1, node.start[1]+1
+
+            mark = None
             if jump_marks:
-                row, col = pos[0]-1, pos[1]+1
 
                 if backward:
-                    if row < curr_pos[0]:
+                    if tag_row < curr_row or (tag_row == curr_row and tag_col < curr_col):
                         mark = jump_marks[0]
                         jump_marks.pop(0)
-                    else:
-                        mark = None
                 else:
-                    if row >= curr_pos[0]:
+                    if tag_row > curr_row or (tag_row == curr_row and tag_col > curr_col):
                         mark = jump_marks[0]
                         jump_marks.pop(0)
-                    else:
-                        mark = None
-            else:
-                mark = None
 
             if mark:
-                old = self.misc.subst_char(buf, mark, row, col)
-                self.highlight_jump_mark((row+1, col+1))
-                table[mark] = (pos, old)
+                old = self.misc.subst_char(buf, mark, tag_row, tag_col)
+                self.highlight_jump_mark((tag_row+1, tag_col+1))
+                table[mark] = (node.start, old)
 
         vim.command("setlocal nomodified")
         vim.command("redraw")
