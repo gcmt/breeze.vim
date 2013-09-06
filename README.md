@@ -1,29 +1,24 @@
 # breeze.vim
 
-**v1.0.1**
-
 ###Features
 * HTML navigation inspired by vim-easymotion.
 * Tag matching.
 * Current element highlighting.
 * Low level DOM navigation.
 
-
 ### Requirements
 * Vim compiled with python 2.6+
-* Unix, Mac OS X (untested on Windows)
-
+* Linux, Mac OS X (untested on Windows)
 
 ### Installation
-You can either extract the content of the folder into the `$HOME/.vim`
-directory or use plugin managers such as Vundle or Pathogen.
-
+The recommended way of installing the plugin is via 
+[Vundle](https://github.com/gmarik/vundle), [Pathogen](https://github.com/tpope/vim-pathogen)
+or [Neobundle](https://github.com/Shougo/neobundle.vim)
 
 ### Houston, we have a problem
 For any functionality listed below, if it seems that something is not working correctly
 (e.g. unresponsive commands), run the `BreezeWhatsWrong` command and you will be shown 
 the origin of the problem.
-
 
 
 ## Tag jumping
@@ -38,48 +33,6 @@ colored marks on the tags you can jump to and wait for your choice.
 Once you have moved to a tag you can easily jump back using the `CTRL+O` 
 vim mapping (:help CTRL+O). Note that when you are asked to insert the target
 key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
-
-### Settings
-
-**g:breeze_jump_to_angle_bracket**: set this option to 1 to jump to the
-opening angle brackets of the tag you are jumping to. Set this option to 0 to
-jump to the first letter of the tag instead.
-
-
-**NOTE**: when setting the following options you can follow two ways:
-
-  * use a long list of "attribute=color" separated by spaces (as you would
-    normally do when defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
-
-  * use the name of a previously defined highlight group. Note, however,
-     that this does not work with highlight groups defined in your `.vimrc`.
-
-
-**g:breeze_shade_color**: this setting defines the color that is used to shade
-the background text when you are using the *jumping* functionality.   
-*default*: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
-
-
-**g:breeze_shade_color_darkbg**: this setting defines the color that is used to
-shade the background text when you are using the *jumping* functionality with
-dark backgrounds (&background == dark). 
-If the value is an empty string the *g:breeze_shade_color* setting is used for dark backgrounds.  
-
-*default*: `''`
-
-
-**g:breeze_jumpmark_color**: this setting defines the color that is used to
-highlight jump marks when you are using the *jumping* functionality.  
-*default*: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
-
-
-**g:breeze_jumpmark_color_darkbg**: this setting defines the color that is used
-to highlight jump marks when you are using the *jumping* functionality with
-dark backgrounds (&background == dark). 
-If the value is an empty string the *g:breeze_jumpmark_color* setting is used for dark backgrounds.  
-
-*default*: `''`
-
 
 
 ## Tag matching and current element highlighting
@@ -101,60 +54,36 @@ with `CTRL+O`.
 and your movements may become quite slow. So you may be better off disabling the feature for such files
 until I'll come up with a fast solution.
 
-### Settings
-
-**g:breeze_highlight_tag**: set this setting to 0 to disable automatic highlighting
-of the opening and closing tags of the current element.    
-*default*: `1`
-
-
-**NOTE**: when defining the following settings you have two options:
-
-  * use a long list of "attribute=color" separated by spaces (as you would
-    normally do when defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
-
-  * use the name of a previously defined highlight group. Note, however,
-     that this does not work with highlight groups defined in your `.vimrc`.
-
-
-**g:breeze_hl_color**: this setting defines the color that is used to
-highlight opening and closing tags.  
-*default:* `MatchParen`
-
-
-**g:breeze_hl_color_darkbg**: this setting defines the color that is used to
-highlight opening and closing tags with dark backgrounds (&background == dark).
-If the value is an empty string the *g:breeze_hl_color* setting is used for dark backgrounds.  
-*default:* `''`
-
-
 
 ## DOM navigation
 ![Screenshot](extra/dom.gif "DOM navigation")   
 
 The available commands for DOM navigation cover only low level movements at the
-moment but might be useful for exploring dense HTML files.
+moment but might be useful for exploring dense HTML files. You can use commands
+*such as `BreezeNextSibling`, `BreezePrevSibling`, `BreezeFirstSibling`, `BreezeLastSibling`,    
+`BreezeFirstChild`, `BreezeLastChild` and BreezeParent`.    
+
+## Changelog
+See [CHANGELOG.md](CHANGELOG.md).
 
 
-### Commands
+## License
+Copyright (c) 2013 Giacomo Comitti
 
-**BreezeNextSibling**   
-Moves the cursor to the next sibling node.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
 
-**BreezePrevSibling**     
-Moves the cursor to the previous sibling node.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-**BreezeFirstSibling**     
-Moves the cursor to the first sibling node.
-
-**BreezeLastSibling**     
-Moves the cursor to the last sibling node.
-
-**BreezeFirstChild**   
-Moves the cursor to the first child node.
-
-**BreezeLastChild**   
-Moves the cursor to the last child node.
-
-**BreezeParent**     
-Moves the cursor to the parent node.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
