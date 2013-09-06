@@ -16,6 +16,7 @@ the above functionality is the "jump" method.
 """
 
 import vim
+import string
 
 import breeze.input
 import breeze.utils.misc
@@ -32,8 +33,7 @@ class Jumper(object):
         self.plug = plug
 
         # jump marks
-        self.jump_marks = list("qwertyuiopasdfghjklzxcvbnm"
-                               "QWERTYUIOPASDFGHJKLZXCVBNM")
+        self.jump_marks = list(string.letters)
 
     def show_jump_marks(self, backward=False):
         """Displays jump marks."""
@@ -44,12 +44,13 @@ class Jumper(object):
         table = {}
         buf = vim.current.buffer
         jump_marks = self.jump_marks[:]
-
         vim.command("setlocal modifiable noreadonly")
 
         top, bot = self.misc.window_bundaries()
         nodes = [node for node in self.plug.parser.all_nodes()
                  if node.start[0] >= top and node.start[0] <= bot]
+        if backward:
+            nodes = reversed(nodes)
 
         vim.command("try|undojoin|catch|endtry")
 
