@@ -1,25 +1,25 @@
 *breeze.txt* *breeze*
 
-                               breeze v1.0.1
-                                     ~ 
-                              Reference Manual
+
+                           Breeze - Reference Manual
 
 
 ==============================================================================
 CONTENTS                                                     *breeze-contents*
 
 
-        Overview ........................... |breeze-overview|
-        Tag Jumping ........................ |breeze-jumping|
-          - Settings ....................... |breeze-jumping-settings|
-        Tag Matching ....................... |breeze-matching|
-          - Settings ....................... |breeze-matching-settings|
-        Dom navigation ..................... |breeze-dom-navigation|
-        About .............................. |breeze-about|
+        1. Overview ........................... |breeze-overview|
+        2. Tag Jumping ........................ |breeze-tag-jumping|
+        3. Tag Matching ....................... |breeze-tag-matching|
+        4. Dom navigation ..................... |breeze-dom-navigation|
+        5. Options ............................ |breeze-options|
+        6. Changelog .......................... |breeze-changelog|
+        7. About .............................. |breeze-about|
+        8. License ............................ |breeze-license|
 
 
 ==============================================================================
-OVERVIEW                                                     *breeze-overview*
+1. Overview                                                  *breeze-overview*
 
 Breeze is a plugin that aims to help developers dealing with HTML files.
 
@@ -30,36 +30,19 @@ Features:
     * Current element highlighting.
     * Low level DOM navigation.
 
-
-------------------------------------------------------------------------------
-Requirements
-
-    * Vim compiled with python 2.6+
-    * Unix, Mac OS X (untested on Windows)
-
-
-------------------------------------------------------------------------------
-Installation
-
-    You can either extract the content of the folder into the `$HOME/.vim`
-    directory or use plugin managers such as Vundle or Pathogen.
-
-
 ------------------------------------------------------------------------------
 Houston, we have a problem
 
-    For any functionality listed below, if it seems that something is not
-    working correctly(e.g. unresponsive commands), run the *BreezeWhatsWrong*
-    command and you will be shown the origin of the problem.
-
+For any functionality listed below, if it seems that something is not working
+correctly(e.g. unresponsive commands), run the *BreezeWhatsWrong* command and
+you will be shown the origin of the problem.
 
 
 ==============================================================================
-TAG JUMPING                                                  *breeze-jumping*
+2. Tag Jumping                                            *breeze-tag-jumping*
 
-Tag jumping implemented by Breeze is heavily inspired by vim-easymotion.
-To jump to following tags use the command *BreezeJumpF*. 
-Use *BreezeJumpB* to jump to preceding tags.
+Breeze provides the commands |BreezeJumpF| and |BreezeJumpB| to jump to
+opening tags of following and preceding HTML elements respectively.
 
 When you run one of the aforementioned commands, Breeze displays
 colored marks on the tags you can jump to and wait for your choice.
@@ -67,147 +50,266 @@ Once you have moved to a tag you can easily jump back using the `CTRL+O`
 vim mapping (:help CTRL+O). Note that when you are asked to insert the target
 key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
 
+------------------------------------------------------------------------------
+:BreezeJumpF                                                     *BreezeJumpF*
+
+Use this command to jump to opening tags of following HTML elements.
+
+------------------------------------------------------------------------------
+:BreezeJumpB                                                     *BreezeJumpB*
+
+Use this command to jump to opening tags of preceding HTML elements.
 
 
 ==============================================================================
-TAG JUMPING - SETTINGS                               *breeze-jumping-settings*
+3. Tag Matching                                          *breeze-tag-matching*
 
+You can use the following commands to highlight the current HTML element.
 
-*g:breeze_jump_to_angle_bracket* set this option to 1 to jump to the
-opening angle brackets of the tag you are jumping to. Set this option to 0 to
-jump to the first letter of the tag instead.
+------------------------------------------------------------------------------
+:BreezeMatchTag                                               *BreezematchTag*
 
-default: `0`
+If the cursor is on an opening tag, this command moves the cursor to the
+corresponding closing tag, and vice-versa. If the command is called in within
+a element, this command moves the cursor to its opening tag. Remember that you
+can easily jump back to the original position pressing `CTRL+O`.                    
 
+------------------------------------------------------------------------------
+:BreezeHlElement                                             *BreezeHlElement*
 
-NOTE When setting the following options you can follow two ways:
-
-  * use a long list of "attribute=color .." (as you would normally do when
-     defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
-
-  * use the name of a previously defined highlight group. Note, however,
-     that this does not work with highlight groups defined in your `.vimrc`.
-
-
-*g:breeze_shade_color* this setting defines the color that is used to shade
-the background text when you are using the jumping functionality.
-
-default: `gui=NONE guifg=#777777 cterm=NONE ctermfg=242`
-
-
-*g:breeze_shade_color_darkbg* this setting defines the color that is used to
-shade the background text when you are using the jumping functionality with
-dark backgrounds (&background == dark). 
-If the value is an empty string the |g:breeze_shade_color| setting is 
-used for dark backgrounds.
-
-default: ``
-
-
-*g:breeze_jumpmark_color* this setting defines the color that is used to
-highlight jump marks when you are using the jumping functionality.   
-
-default: `gui=bold guifg=#ff6155 cterm=bold ctermfg=203`
-
-
-*g:breeze_jumpmark_color_darkbg* this setting defines the color that is used
-to highlight jump marks when you are using the jumping functionality with
-dark backgrounds (&background == dark).
-If the value is an empty string the |g:breeze_jumpmark_color| setting is
-used for dark backgrounds.  
-
-
-default: ``
-
-
-
-==============================================================================
-TAG MATCHING                                                *breeze-matching*
+This command highlights opening and closing tags the current HTML element.
 
 By default Breeze highlights the opening and closing tags of the current
-element.  To turn off this functionality you can set |g:breeze_hl_element| 
-to 0. However, you always have at your disposal the *BreezeHlElement* command to 
-highlight the current element. If you prefer highlighting the whole element 
-as a block you can use the *BreezeHlElementBlock* command (just like the `vat` 
-vim motion. However it seems not working properly with self-closing tags).
+element. To turn off this functionality you can set |'breeze_hl_element'| 
+to 0. 
 
-Another useful command is *BreezeMatchTag*. If the cursor is on an opening tag,
-this command moves the cursor to the corresponding closing tag, and vice-versa.
-If the command is called in within a element, this command moves the cursor to
-its opening tag. Remember that you can easily jump back to the original position
-pressing `CTRL+O`.
+------------------------------------------------------------------------------
+:BreezeHlElementBlock                                   *BreezeHlElementBlock*
 
+This command highlights the current HTML element as a block.
 
 
 ==============================================================================
-TAG MATCHING - SETTINGS                            *breeze-matching-settings*
+4. DOM Navigation                                      *breeze-dom-navigation*
 
-*g:breeze_highlight_filename_patterns* set this setting to a comma separated list
-of file patterns that will have tag highlighting. "*.html,*.htm,*.xhtml,*.xml"
-files will always have highlighting.
+The available commands for DOM navigation cover only low level movements at 
+the moment but might be useful for exploring dense HTML files.
 
-example: >
-  let g:breeze_highlight_filename_patterns = '*.jsp,*.erb,*.asp,*.aspx'
+------------------------------------------------------------------------------
+:BreezeNextSibling                                         *BreezeNextSibling*
+
+Moves the cursor to the next sibling node.
+
+------------------------------------------------------------------------------
+:BreezePrevSibling                                         *BreezePrevSibling*
+
+Moves the cursor to the previous sibling node.
+
+------------------------------------------------------------------------------
+:BreezeFirstSibling                                       *BreezeFirstSibling*
+
+Moves the cursor to the first sibling node.
+
+------------------------------------------------------------------------------
+:BreezeLastSibling                                         *BreezeLastSibling*
+
+Moves the cursor to the last sibling node.
+
+------------------------------------------------------------------------------
+:BreezeFirstChild                                           *BreezeFirstChild*
+
+Moves the cursor to the first child node.
+
+------------------------------------------------------------------------------
+:BreezeLastChild                                             *BreezeLastChild*
+
+Moves the cursor to the last child node.
+
+------------------------------------------------------------------------------
+:BreezeParent                                                   *BreezeParent*
+
+Moves the cursor to the parent node.
+
+
+==============================================================================
+5. Options                                                    *breeze-options*
+
+------------------------------------------------------------------------------
+                                                   *'breeze_active_filetypes'* 
+
+Set this option to a comma separated list of file patterns that will have tag
+highlighting.
+
+Default: "*.html,*.htm,*.xhtml,*.xml"
+
+------------------------------------------------------------------------------
+                                              *'breeze_jump_to_angle_bracket'*
+
+Set this option to 1 and Breeze will move to the opening angle bracket when
+jumping to a tag. Set this option to 0 to move to the first letter of the tag
+instead.
+
+Default: 0
+
+------------------------------------------------------------------------------
+                                                      *'breeze_highlight_tag'* 
+
+Set this option to 0 to disable automatic highlighting of the opening and
+closing tags of the current element.    
+
+Default: 1
+
+------------------------------------------------------------------------------
+                                                         *'breeze_shade_color* 
+
+With this option you can define the color used to highlight everything except
+jump marks. As values, you can use previously defined highlight groups, such as
+'String', 'Comment', etc.. or full-fledged color declarations as you would do
+when defining your own highlight group (as you can see in the default
+argument).  see in the default argument).
+
+Example 1
+>
+    let g:breeze_shade_color = "gui=NONE guifg=#999999 cterm=NONE ctermfg=245"
+<
+Example 2
+>
+    hi MyHighlightGroup gui=NONE guifg=#999999 cterm=NONE ctermfg=245
+    let g:breeze_shade_color = "MyHighlightGroup" 
+<
+Example 3
+>
+    let g:breeze_shade_color = "String" 
 <
 
-*g:breeze_highlight_tag* set this setting to 0 to disable automatic
-highlighting of the opening and closing tags of the current element.    
+Default: "Comment"
 
-default: `1`
+------------------------------------------------------------------------------
+                                                 *'breeze_shade_color_darkbg'* 
 
+This option behaves as the |'breeze_shade_color'| option but this one is used
+when the current background is dark (&backgroud == "dark").
+  
+See the |'breeze_shade_color'| option for examples.
 
-NOTE When defining the following settings you have two options:
+Default: the value of |'breeze_shade_color'|
 
-  * use a long list of "attribute=color .." (as you would normally do when
-     defining highlight groups) such as guifg=#424242, ctermfg=242, etc..
+------------------------------------------------------------------------------
+                                                     *'breeze_jumpmark_color'* 
 
-  * use the name of a previously defined highlight group. Note, however,
-     that this does not work with highlight groups defined in your `.vimrc`.
+With this option you can define the color used to highlight jump marks.
+As values, you can use previously defined highlight groups, such as 'String',
+'Comment', etc.. or full-fledged color declarations as you would do when
+defining your own highlight group (as you can see in the default argument).
+see in the default argument).
 
+Example 1
+>
+    let g:breeze_jumpmark_color = "gui=NONE guifg=#999999 cterm=NONE ctermfg=245"
+<
+Example 2
+>
+    hi MyHighlightGroup gui=NONE guifg=#999999 cterm=NONE ctermfg=245
+    let g:breeze_jumpmark_color = "MyHighlightGroup" 
+<
+Example 3
+>
+    let g:breeze_jumpmark_color = "String" 
+<
 
-*g:breeze_hl_color* this setting defines the color that is used to
-highlight opening and closing tags.  
+Default: "WarningMsg"
 
-default: `MatchParen`
+------------------------------------------------------------------------------
+                                              *'breeze_jumpmark_color_darkbg'* 
 
+This option behaves as the |'breeze_jumpmark_color'| option but this one is used
+when the current background is dark (&backgroud == "dark").
+  
+See the |'breeze_jumpmark_color'| option for examples.
 
-*g:breeze_hl_color_darkbg* this setting defines the color that is used to
-highlight opening and closing tags with dark backgrounds (&background == dark).
-If the value is an empty string the |g:breeze_hl_color| setting is used for
-dark backgrounds.  
+Default: the value of |'breeze_jumpmark_color'|
 
+------------------------------------------------------------------------------
+                                                           *'breeze_hl_color'* 
 
-default: ``
+With this option you can define the color used to highlight opening and closing
+tags of the current HTML element.
+As values, you can use previously defined highlight groups, such as 'String',
+'Comment', etc.. or full-fledged color declarations as you would do when
+defining your own highlight group (as you can see in the default argument).
+see in the default argument).
 
+Example 1
+>
+    let g:breeze_hl_color = "gui=NONE guifg=#999999 cterm=NONE ctermfg=245"
+<
+Example 2
+>
+    hi MyHighlightGroup gui=NONE guifg=#999999 cterm=NONE ctermfg=245
+    let g:breeze_hl_color = "MyHighlightGroup" 
+<
+Example 3
+>
+    let g:breeze_hl_color = "String" 
+<
+
+Default: "MatchParen"
+
+------------------------------------------------------------------------------
+                                                    *'breeze_hl_color_darkbg'*
+
+This option behaves as the |'breeze_hl_color'| option but this one is used
+when the current background is dark (&backgroud == "dark").
+  
+See the |'breeze_hl_color'| option for examples.
+
+Default: < the value of |'breeze_hl_color'| >
 
 
 ==============================================================================
-DOM NAVIGATION                                        *breeze-dom-navigation*
+6. Changelog                                                *breeze-changelog*
 
-The available commands for DOM navigation cover only low level movements at the
-moment but might be useful for exploring dense HTML files.
+v1.1 (2013-09-07)
 
-Commands:
+    * Add support for custom filetypes via the `breeze_active_filetypes` option.
+    * Now jump marks are displayed in alphabetical order.
+    * Fix tag jumping when dealing with multiple HTML tags on the same line.
+    * New options: `breeze_jump_to_angle_bracket`.
+    * New commands: `BreezeWhatsWrong`, `BreezeFirstSibling`, `BreezeLastSibling`.
+    * Other minor improvements and fixes.
 
-*BreezeNextSibling*: Moves the cursor to the next sibling node.
+v1.0 (2013-04-29)
 
-*BreezePrevSibling*: Moves the cursor to the previous sibling node.
-
-*BreezeFirstSibling*: Moves the cursor to the first sibling node.
-
-*BreezeLastSibling*: Moves the cursor to the last sibling node.
-
-*BreezeFirstChild*: Moves the cursor to the first child node.
-
-*BreezeLastChild*: Moves the cursor to the last child node.
-
-*BreezeParent*: Moves the cursor to the parent node.
-
+    * First stable release.      
 
 
 ==============================================================================
-ABOUT                                                          *breeze-about*
+7. About                                                        *breeze-about*
 
 Author: Giacomo Comitti
-License: MIT
+Contributors: https://github.com/gcmt/breeze.vim/contributors
 Git repository: https://github.com/gcmt/breeze.vim
+
+
+==============================================================================
+8. License                                                    *breeze-license*
+
+Copyright (C) 2013 Giacomo Comitti
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

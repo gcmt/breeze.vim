@@ -1,6 +1,6 @@
 # breeze.vim
 
-###Features
+### Features
 * HTML navigation inspired by vim-easymotion.
 * Tag matching.
 * Current element highlighting.
