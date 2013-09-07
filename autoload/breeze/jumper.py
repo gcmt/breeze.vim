@@ -3,9 +3,8 @@
 breeze.jumper
 ~~~~~~~~~~~~~
 
-Jumper class definition.
-
-The Jumper is responsible for the jumping functionality:
+This module defines the Jumper class. The Jumper is responsible for the jumping
+functionality:
 
     1. display jump marks on the current buffer
     2. ask the user for the destination mark
@@ -18,43 +17,53 @@ the above functionality is the "jump" method.
 import vim
 import string
 
-import breeze.input
-import breeze.utils.misc
-import breeze.utils.settings
+from breeze.utils import v
+from breeze.utils import input
+from breeze.utils import settings
 
 
 class Jumper(object):
 
     def __init__(self, plug):
-        # modules reference shortcuts
-        self.settings = breeze.utils.settings
-        self.misc = breeze.utils.misc
-
         self.plug = plug
-
-        # jump marks
         self.jump_marks = list(string.letters)
 
-    def show_jump_marks(self, backward=False):
-        """Displays jump marks."""
-        top, bot = self.misc.window_bundaries()
-        self.misc.highlight("BreezeShade",
-            "\\%>{0}l\\%<{1}l".format(top-1, bot+1))
+    def jump(self, backward=False):
+        """To display jump marks and move to the selected jump mark."""
+        table = self._show_jump_marks(backward)
+        choice = None
+        while choice not in table:
+            choice = self._ask_target_key()
+            if choice is None:
+                break
+
+        v.clear_hl('BreezeJumpMark', 'BreezeShade')
+        self._clear_jump_marks(table)
+
+        if choice:
+            row, col = table[choice][0]
+            if not settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            v.cursor((row, col))
+
+    def _show_jump_marks(self, backward=False):
+        """To display jump marks."""
+        top, bot = v.window_bundaries()
+        v.highlight("BreezeShade", "\\%>{}l\\%<{}l".format(top-1, bot+1))
 
         table = {}
         buf = vim.current.buffer
         jump_marks = self.jump_marks[:]
-        vim.command("setlocal modifiable noreadonly")
+        vim.command("setl modifiable noreadonly")
 
-        top, bot = self.misc.window_bundaries()
+        top, bot = v.window_bundaries()
         nodes = [node for node in self.plug.parser.all_nodes()
                  if node.start[0] >= top and node.start[0] <= bot]
         if backward:
             nodes = reversed(nodes)
 
         vim.command("try|undojoin|catch|endtry")
-
-        curr_pos = self.misc.cursor()
+        curr_pos = v.cursor()
         curr_row, curr_col = curr_pos[0]-1, curr_pos[1]
 
         for node in nodes:
@@ -74,64 +83,39 @@ class Jumper(object):
                         jump_marks.pop(0)
 
             if mark:
-                old = self.misc.subst_char(buf, mark, tag_row, tag_col)
-                self.highlight_jump_mark((tag_row+1, tag_col+1))
+                old = v.subst_char(buf, mark, tag_row, tag_col)
+                self._highlight_jump_mark((tag_row+1, tag_col+1))
                 table[mark] = (node.start, old)
 
-        vim.command("setlocal nomodified")
-        vim.command("redraw")
+        vim.command("setl nomodified")
+        v.redraw()
+
         return table
 
-    def highlight_jump_mark(self, pos, special=False):
-        """Highligts the jump mark at the given position."""
-        self.misc.highlight("BreezeJumpMark", "\\%{0}l\\%{1}c".format(*pos))
+    def _highlight_jump_mark(self, pos, special=False):
+        """To highligt the jump mark at the given position."""
+        v.highlight("BreezeJumpMark", "\\%{}l\\%{}c".format(*pos))
 
-    def ask_target_key(self):
-        """Ask the user where to jump."""
-        input = breeze.input.Input()
+    def _ask_target_key(self):
+        """To ask the user where to jump."""
+        key = input.Input()
         while True:
             vim.command('echohl Question|echo " target: "|echohl None')
-            input.get()
-
-            if input.ESC or input.INTERRUPT:
+            key.get()
+            if key.ESC or key.INTERRUPT:
                 return
-            elif input.CHAR:
-                return input.CHAR
+            elif key.CHAR:
+                return key.CHAR
+            v.redraw()
 
-            vim.command("redraw")
-
-    def clear_jump_marks(self, table):
-        """Clear jump marks."""
+    def _clear_jump_marks(self, table):
+        """To clear jump marks."""
         vim.command("try|undojoin|catch|endtry")
         # restore characters
-        buf = vim.current.buffer
-        for mark, v in table.items():
-            pos, old = v
+        for mark, tpl in table.items():
+            pos, old = tpl
             row, col = pos[0]-1, pos[1]+1
-            self.misc.subst_char(buf, old, row, col)
+            v.subst_char(vim.current.buffer, old, row, col)
 
-        vim.command("setlocal nomodified")
-        vim.command("redraw")
-
-    def jump(self, backward=False):
-        """Displays jump marks, asks for the target key and moves
-        to the desired position.
-
-        The whole process can be aborted with <ESC> or Ctrl-C.
-        """
-        table = self.show_jump_marks(backward)
-        choice = None
-        while choice not in table:
-            choice = self.ask_target_key()
-            if choice is None:
-                break
-
-        self.misc.clear_hl()
-        self.clear_jump_marks(table)
-
-        if choice:
-            row, col = table[choice][0]
-            if not self.settings.get("jump_to_angle_bracket", bool):
-                col += 1
-            self.misc.cursor((row, col))
-
+        vim.command("setl nomodified")
+        v.redraw()

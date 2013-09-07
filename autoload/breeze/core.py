@@ -1,34 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-breeze.py
-~~~~~~~~~
+breeze.core
+~~~~~~~~~~~
 
-This module defines the main class of the Breeze plugin.
+This module defines Breeze class.
 """
 
 import os
 import vim
-import sys
 
-sys.path.insert(0, os.path.dirname(
-    vim.eval('globpath(&runtimepath, "autoload/breeze.py")')))
-
-import breeze.parser
-import breeze.jumper
-import breeze.utils.misc
-import breeze.utils.settings
+from breeze import parser
+from breeze import jumper
+from breeze.utils import v
+from breeze.utils import settings
 
 
-class Breeze(object):
-    """Main Breeze class."""
+class Breeze:
 
     def __init__(self):
-        # module reference shortcuts
-        self.settings = breeze.utils.settings
-        self.misc = breeze.utils.misc
-
-        self.parser = breeze.parser.Parser()
-        self.jumper = breeze.jumper.Jumper(self)
+        self.parser = parser.Parser()
+        self.jumper = jumper.Jumper(self)
 
         self.setup_colors()
 
@@ -43,20 +34,19 @@ class Breeze(object):
              "keygen", "track", "wbr"])
 
     def parse_current_buffer(f):
-        """This method exists in order to provide some primitive form of
-        caching.
+        """To provide some naive form of caching.
 
         This decorator ensures that the wrapped method will have access to
         a fully parsed DOM tree structure for the current buffer.
         """
         def wrapper(self, *args, **kwargs):
-            if self.refresh_cache or vim.eval("&modified") == '1':
+            if self.refresh_cache or vim.eval("&mod") == '1':
                 self.parser.feed(vim.current.buffer)
                 if self.parser.success:
                     self.cache = self.parser.tree
                     self.refresh_cache = False
                 else:
-                    self.misc.clear_hl()
+                    v.clear_hl('BreezeJumpMark', 'BreezeShade')
                     self.refresh_cache = True
                     return
             else:
@@ -65,9 +55,8 @@ class Breeze(object):
         return wrapper
 
     def remember_curr_pos(f):
-        """Adds the current cursor position to the jump list.
-
-        The user can come back with Ctrl+O.
+        """To add the current cursor position to the jump list so that the user
+        can come back with CTRL+O.
         """
         def wrapper(self, *args, **kwargs):
             vim.command("normal! m'")
@@ -75,26 +64,16 @@ class Breeze(object):
         return wrapper
 
     def setup_colors(self):
-        """Setups highlight groups according to the current settings."""
-
-        shade = self.settings.get("shade_color")
-        marks = self.settings.get("jumpmark_color")
-        hl = self.settings.get("hl_color")
-
-        if vim.eval("&background") == 'dark':
-            s = self.settings.get("shade_color_darkbg")
-            shade = s if s else shade
-            m = self.settings.get("jumpmark_color_darkbg")
-            marks = m if m else marks
-            h = self.settings.get("hl_color_darkbg")
-            hl = h if h else hl
-
-        for g, c in (("Shade", shade), ("JumpMark", marks), ("Hl", hl)):
-            if "=" not in c:
-                # a group is found
-                vim.command("hi link Breeze{0} {1}".format(g, c))
+        """To setup Breeze highlight groups."""
+        postfix = "" if vim.eval("&bg") == "light" else "_darkbg"
+        shade = settings.get("shade_color{}".format(postfix))
+        mark = settings.get("jumpmark_color{}".format(postfix))
+        hl = settings.get("hl_color{}".format(postfix))
+        for g, color in (("Shade", shade), ("JumpMark", mark), ("Hl", hl)):
+            if "=" in color:
+                vim.command("hi Breeze{} {}".format(g, color))
             else:
-                vim.command("hi Breeze{0} {1}".format(g, c))
+                vim.command("hi link Breeze{} {}".format(g, color))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -113,7 +92,7 @@ class Breeze(object):
     @parse_current_buffer
     def highlight_curr_element(self):
         """Highlights opening and closing tags of the current element."""
-        self.misc.clear_hl(['BreezeHl'])
+        v.clear_hl('BreezeHl')
 
         node = self.parser.get_current_node()
         if node:
@@ -121,7 +100,7 @@ class Breeze(object):
             endcol = startcol + len(node.tag) + 1
             patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
                 line, startcol, endcol)
-            self.misc.highlight("BreezeHl", patt)
+            v.highlight("BreezeHl", patt)
 
             if node.tag not in self.empty_tags:
 
@@ -129,9 +108,7 @@ class Breeze(object):
                 endcol = startcol + len(node.tag) + 2
                 patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
                     line, startcol, endcol)
-                self.misc.highlight("BreezeHl", patt)
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.highlight("BreezeHl", patt)
 
     @parse_current_buffer
     def highlight_element_block(self, node=None):
@@ -139,7 +116,7 @@ class Breeze(object):
 
         This works exactly as the 'vat' motion.
         """
-        self.misc.clear_hl(['BreezeHl'])
+        v.clear_hl('BreezeHl')
 
         if node is None:
             node = self.parser.get_current_node()
@@ -154,18 +131,18 @@ class Breeze(object):
                 endcol = startcol + len(node.tag) + 1
                 patt = "\\%{0}l\\%>{1}c".format(
                     sline, startcol, endcol)
-                self.misc.highlight("BreezeHl", patt)
+                v.highlight("BreezeHl", patt)
 
                 # highlight end line
                 eline, startcol = node.end[0], node.end[1]+1
                 endcol = startcol + len(node.tag) + 3
                 closing = "\\%{0}l\\%<{1}c".format(
                     eline, endcol)
-                self.misc.highlight("BreezeHl", patt)
+                v.highlight("BreezeHl", patt)
 
                 # highlight lines between start and end tag
                 patt = "\\%>{0}l\\%<{1}l".format(sline, eline)
-                self.misc.highlight("BreezeHl", patt)
+                v.highlight("BreezeHl", patt)
 
             else:
 
@@ -175,17 +152,14 @@ class Breeze(object):
                     endcol = startcol + len(node.tag) + 1
                     patt = "\\%{0}l\\%>{1}c".format(
                         sline, startcol, endcol)
-                    self.misc.highlight("BreezeHl", patt)
+                    v.highlight("BreezeHl", patt)
                 else:
                     # highlight tag on a single line
                     line, startcol = node.start[0], node.start[1]
                     endcol = node.end[1] + len(node.tag) + 4
                     patt = "\\%{0}l\\%>{1}c\\%<{2}c".format(
                         line, startcol, endcol)
-                    self.misc.highlight("BreezeHl", patt)
-
-        else:
-            self.misc.echov("cannot locate the current node")
+                    v.highlight("BreezeHl", patt)
 
     @remember_curr_pos
     @parse_current_buffer
@@ -199,7 +173,7 @@ class Breeze(object):
         node = self.parser.get_current_node()
         if node:
 
-            row, col = self.misc.cursor()
+            row, col = v.cursor()
             if row != node.start[0]:
                 target = node.start
             else:
@@ -210,12 +184,9 @@ class Breeze(object):
                     target = node.start
 
             row, col = target
-            if not self.settings.get("jump_to_angle_bracket", bool):
+            if not settings.get("jump_to_angle_bracket", bool):
                 col += 1
-            self.misc.cursor((row, col))
-
-        else:
-            self.misc.echov("cannot locate the current node")
+            v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -229,18 +200,16 @@ class Breeze(object):
                     if c.start == node.start and c.end == node.end:
                         if i + 1 < len(ch):
                             row, col = ch[i+1].start
-                            if not self.settings.get("jump_to_angle_bracket", bool):
+                            if not settings.get("jump_to_angle_bracket", bool):
                                 col += 1
-                            self.misc.cursor((row, col))
+                            v.cursor((row, col))
                         else:
-                            self.misc.echom("no siblings found")
+                            v.echom("no siblings found")
             else:
-                self.misc.echom("no siblings found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.echom("no more siblings")
 
     @remember_curr_pos
-    @parse_current_buffer
+    @        parse_current_buffer
     def goto_prev_sibling(self):
         """Moves the cursor to the previous sibling node."""
         node = self.parser.get_current_node()
@@ -251,15 +220,13 @@ class Breeze(object):
                     if c.start == node.start and c.end == node.end:
                         if i - 1 >= 0:
                             row, col = ch[i-1].start
-                            if not self.settings.get("jump_to_angle_bracket", bool):
+                            if not settings.get("jump_to_angle_bracket", bool):
                                 col += 1
-                            self.misc.cursor((row, col))
+                            v.cursor((row, col))
                         else:
-                            self.misc.echom("no siblings found")
+                            v.echom("no siblings found")
             else:
-                self.misc.echom("no siblings found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.echom("no previous siblings")
 
     @remember_curr_pos
     @parse_current_buffer
@@ -269,13 +236,9 @@ class Breeze(object):
         if node:
             if node.parent:
                 row, col = node.parent.children[0].start
-                if not self.settings.get("jump_to_angle_bracket", bool):
+                if not settings.get("jump_to_angle_bracket", bool):
                     col += 1
-                self.misc.cursor((row, col))
-            else:
-                self.misc.echov("no siblings found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -285,13 +248,9 @@ class Breeze(object):
         if node:
             if node.parent:
                 row, col = node.parent.children[-1].start
-                if not self.settings.get("jump_to_angle_bracket", bool):
+                if not settings.get("jump_to_angle_bracket", bool):
                     col += 1
-                self.misc.cursor((row, col))
-            else:
-                self.misc.echov("no siblings found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -301,13 +260,9 @@ class Breeze(object):
         if node:
             if node.children:
                 row, col = node.children[0].start
-                if not self.settings.get("jump_to_angle_bracket", bool):
+                if not settings.get("jump_to_angle_bracket", bool):
                     col += 1
-                self.misc.cursor((row, col))
-            else:
-                self.misc.echom("no children found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -317,13 +272,9 @@ class Breeze(object):
         if node:
             if node.children:
                 row, col = node.children[-1].start
-                if not self.settings.get("jump_to_angle_bracket", bool):
+                if not settings.get("jump_to_angle_bracket", bool):
                     col += 1
-                self.misc.cursor((row, col))
-            else:
-                self.misc.echom("no children found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -333,13 +284,11 @@ class Breeze(object):
         if node:
             if node.parent.tag != "root":
                 row, col = node.parent.start
-                if not self.settings.get("jump_to_angle_bracket", bool):
+                if not settings.get("jump_to_angle_bracket", bool):
                     col += 1
-                self.misc.cursor((row, col))
+                v.cursor((row, col))
             else:
-                self.misc.echom("no parent found")
-        else:
-            self.misc.echov("cannot locate the current node")
+                v.echom("no parent found")
 
     @parse_current_buffer
     def print_dom(self):
@@ -349,4 +298,4 @@ class Breeze(object):
     def whats_wrong(self):
         """If something went wrong during the last parse,
         tell the user about it."""
-        self.misc.echom(self.parser.get_error())
+        v.echom(self.parser.get_error())

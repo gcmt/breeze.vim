@@ -1,29 +1,35 @@
 # -*- coding: utf-8 -*-
 """
-breeze.utils.misc
-~~~~~~~~~~~~~~~~~
+breeze.utils.v
+~~~~~~~~~~~~~~
 
-This module defines various utility functions and some tiny wrappers
-around vim functions.
+This module defines thin wrappers around vim commands and functions.
 """
 
 import vim
-import breeze.utils.settings
+
+from breeze.utils import settings
 
 
 def echom(msg):
-    """Gives a simple feedback to the user via the command line."""
-    vim.command('echom "[breeze] {0}"'.format(msg.replace('"', '\"')))
+    """To display a message to the user via the command line."""
+    vim.command('echom "[breeze] {}"'.format(msg.replace('"', '\"')))
 
 
-def echov(msg):
-    """Gives a feedback only if g:breeze_verbosity = 1."""
-    if breeze.utils.settings.get("verbosity", bool):
-        echom(msg)
+def echohl(msg, hlgroup):
+    """To display a colored message to the user via the command line."""
+    vim.command("echohl {}".format(hlgroup))
+    echom(msg)
+    vim.command("echohl None")
+
+
+def redraw():
+    """Little wrapper around the redraw command."""
+    vim.command('redraw')
 
 
 def cursor(target=None):
-    """Moves the cursor or returs the current cursor position."""
+    """To move the cursor or return the current cursor position."""
     if not target:
         return vim.current.window.cursor
     else:
@@ -31,7 +37,7 @@ def cursor(target=None):
 
 
 def window_bundaries():
-    """Returns the top and bottom lines number for the current window."""
+    """To return the top and bottom lines number for the current window."""
     curr_pos = cursor()
 
     scrolloff = vim.eval("&scrolloff")
@@ -46,29 +52,25 @@ def window_bundaries():
 
     # restore position and changed options
     cursor(curr_pos)
-    vim.command("setlocal scrolloff={0}".format(scrolloff))
+    vim.command("setlocal scrolloff={}".format(scrolloff))
 
     return top, bot
 
 
 def highlight(group, patt, priority=10):
-    """Wraps the matchadd() vim function."""
-    return vim.eval("matchadd('{0}', '{1}', {2})".format(
-                    group, patt, priority))
+    """Wrapper of the matchadd() vim function."""
+    return vim.eval("matchadd('{}', '{}', {})".format(group, patt, priority))
 
 
-def clear_hl(groups=None):
-    """Clears Breeze highlightings."""
-    if groups is None:
-        groups = ('BreezeJumpMark', 'BreezeShade')
-
+def clear_hl(*groups):
+    """To clear Breeze highlightings."""
     for match in vim.eval("getmatches()"):
         if match['group'] in groups:
-            vim.command("call matchdelete({0})".format(match['id']))
+            vim.command("call matchdelete({})".format(match['id']))
 
 
 def subst_char(buffer, v, row, col):
-    """Substitutes a character in the buffer with the given character at the
+    """To substitute a character in the buffer with the given character at the
     given position. Return the substituted character."""
     if row >= len(buffer):
         raise ValueError("row index out of bound")
@@ -82,7 +84,3 @@ def subst_char(buffer, v, row, col):
     buffer[row] = "".join(new_line)
 
     return old
-
-
-
-

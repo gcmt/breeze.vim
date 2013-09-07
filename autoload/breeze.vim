@@ -1,29 +1,26 @@
-" ============================================================================
-" File: autoload/breeze.vim
-" Description: DOM navigation
-" Mantainer: Giacomo Comitti (https://github.com/gcmt)
-" Url: https://github.com/gcmt/breeze.vim
-" License: MIT
-" Version: 1.0.1
-" Last Changed: 6/24/2013
-" ============================================================================
+" autoload/breeze.vim
 
-" Init {{{
+
+" Init
+" ----------------------------------------------------------------------------
+
+let s:current_folder = expand("<sfile>:p:h")
 
 fu! breeze#init()
-    let py_module = fnameescape(globpath(&runtimepath, 'autoload/breeze.py'))
-    exe 'pyfile ' . py_module
-    python breeze_plugin = Breeze()
+    py import vim, sys
+    py sys.path.insert(0, vim.eval("s:current_folder"))
+    py import breeze.core
+    py breeze_plugin = breeze.core.Breeze()
+    let g:breeze_initialized = 1
 endfu
 
 call breeze#init()
 let g:breeze_initialized = 1
 
-" }}}
+" Wrappers
+" ----------------------------------------------------------------------------
 
-" Wrappers {{{
-
-" tag jumping {{{
+" tag jumping
 
 fu! breeze#JumpForward()
     py breeze_plugin.jump_forward()
@@ -33,9 +30,7 @@ fu! breeze#JumpBackward()
     py breeze_plugin.jump_backward()
 endfu
 
-" }}}
-
-" tag matching / highlighting {{{
+" tag matching / highlighting
 
 fu! breeze#MatchTag()
     py breeze_plugin.match_tag()
@@ -49,9 +44,7 @@ fu! breeze#HighlightElementBlock()
     py breeze_plugin.highlight_element_block()
 endfu
 
-" }}}
-
-" dom navigation {{{
+" dom navigation
 
 fu! breeze#NextSibling()
     py breeze_plugin.goto_next_sibling()
@@ -81,9 +74,7 @@ fu! breeze#Parent()
     py breeze_plugin.goto_parent()
 endfu
 
-" }}}
-
-" misc {{{
+" misc
 
 fu! breeze#PrintDom()
     py breeze_plugin.print_dom()
@@ -93,30 +84,26 @@ fu! breeze#WhatsWrong()
     py breeze_plugin.whats_wrong()
 endfu
 
-" }}}
 
-" }}}
+" Autocommands
+" ----------------------------------------------------------------------------
 
-" Autocommands {{{
+py import breeze.utils.v
 
 augroup breeze_plugin
-
     au!
-    exe 'au Colorscheme '.g:breeze_highlight_filename_patterns.' py breeze_plugin.setup_colors()'
-    exe 'au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze.utils.misc.clear_hl(["BreezeHl"])'
 
-    " FIX: at this events the plugin should rebuild the cache,
-    " not just tell that the cache need to be updated
-    exe 'au BufReadPost,BufWritePost,BufEnter '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
-    exe 'au CursorHold,CursorHoldI '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
-    exe 'au InsertEnter,InsertLeave '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
-    exe 'au BufWritePost '.g:breeze_highlight_filename_patterns.' py breeze_plugin.refresh_cache=True'
+    exe 'au Colorscheme '.g:breeze_active_filetypes.' py breeze_plugin.setup_colors()'
+    exe 'au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze.utils.v.clear_hl("BreezeHl")'
+
+    exe 'au BufReadPost,BufWritePost,BufEnter '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
+    exe 'au CursorHold,CursorHoldI '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
+    exe 'au InsertEnter,InsertLeave '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
+    exe 'au BufWritePost '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
 
     if g:breeze_hl_element
-        exe 'au CursorMoved '.g:breeze_highlight_filename_patterns.' py breeze_plugin.highlight_curr_element()'
-        au InsertEnter *.* py breeze.utils.misc.clear_hl(["BreezeHl"])
+        exe 'au CursorMoved '.g:breeze_active_filetypes.' py breeze_plugin.highlight_curr_element()'
+        au InsertEnter *.* py breeze.utils.v.clear_hl("BreezeHl")
     endif
 
 augroup END
-
-" }}}

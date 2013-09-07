@@ -3,17 +3,15 @@
 breeze.parser
 ~~~~~~~~~~~~~
 
-Parser class definition.
-
-The Parser is responsible for parsing the current buffer and generating
-a DOM tree.
+This module defines the Parser and Node classes. The Parser is responsible for
+parsing the current buffer and generating a DOM tree, whereas the Node class is
+needed to represent a single HTML node.
 """
 
 import vim
 import itertools
 
-import breeze.utils.misc
-import breeze.utils.settings
+from breeze.utils import v
 
 try:
     # python 3
@@ -22,36 +20,27 @@ except ImportError:
     import HTMLParser as HTMLParser
 
 
-class Node(object):
-    """Node definition."""
+class Node:
 
-    def __init__(self, tag="", starttag_text="",
-                 parent=None, start=None, end=None):
-        self.tag = tag          # tag name
-        self.starttag_text = starttag_text # raw starttag text
-        self.start = start      # a tuple (row, col)
-        self.end = end          # a tuple (row, col)
-        self.parent = parent    # a Node or None (if root)
-        self.children = []      # a list of Nodes
+    def __init__(self, tag="", starttag_text="", parent=None, start=None, end=None):
+        self.tag = tag  # tag name
+        self.starttag_text = starttag_text  # raw starttag text
+        self.start = start  # a tuple (row, col)
+        self.end = end  # a tuple (row, col)
+        self.parent = parent  # a Node or None (if root)
+        self.children = []  # a list of Nodes
 
     def __str__(self):
-        return "<{0} start={1} end={2}>".format(
-            self.tag, self.start, self.end)
+        return "<{} start={} end={}>".format(self.tag, self.start, self.end)
 
     def __repr__(self):
-        return "<{0} start={1} end={2}>".format(
-            self.tag, self.start, self.end)
+        return "<{} start={} end={}>".format(self.tag, self.start, self.end)
 
 
 class Parser(HTMLParser.HTMLParser):
-    """Custom HTML parser."""
 
     def __init__(self):
-        HTMLParser.HTMLParser.__init__(self)  # TODO: check with python 3
-
-        # module reference shortcuts
-        self.misc = breeze.utils.misc
-
+        HTMLParser.HTMLParser.__init__(self)
         self.last_known_error = None
         self.success = False
         self.tree = Node(tag="root")
@@ -62,7 +51,7 @@ class Parser(HTMLParser.HTMLParser):
             "command", "keygen", "track", "wbr"])
 
     def feed(self, buffer):
-        """Generates a brand new tree at each call."""
+        """To generate a brand new tree at each call."""
         self.tree = Node(tag="root")
         self.stack = [self.tree]
         try:
@@ -77,12 +66,12 @@ class Parser(HTMLParser.HTMLParser):
             self.reset()
 
     def handle_startendtag(self, tag, attrs):
-        """Handles empty tags."""
+        """To handle empty tags."""
         self.handle_starttag(tag, attrs, skip_emptytag_check=True)
         self.handle_endtag(tag)
 
     def handle_starttag(self, tag, attrs, skip_emptytag_check=False):
-        """Handles the start of a tag.
+        """To handle the start of a tag.
 
         Note how this method handles empty tags. The HTMLParser does not
         recognize self-closing tags if they aren't closed with '../>',
@@ -95,13 +84,12 @@ class Parser(HTMLParser.HTMLParser):
             return
 
         if self.stack:
-            node = Node(tag, self.get_starttag_text(), self.stack[-1],
-                        self.getpos())
+            node = Node(tag, self.get_starttag_text(), self.stack[-1], self.getpos())
             self.stack[-1].children.append(node)
             self.stack.append(node)
 
     def handle_endtag(self, tag):
-        """Handles the end of a tag.
+        """To handle the end of a tag.
 
         If a script tag is opened, ignore all the junk in there until
         the tag is closed.
@@ -114,11 +102,11 @@ class Parser(HTMLParser.HTMLParser):
             if tag != self.stack[-1].tag:
                 # tag mismatch
                 if any(n.tag == tag for n in self.stack):
-                    msg = "no closing tag for '<{0}>'".format(
+                    msg = "no closing tag for '<{}>'".format(
                         self.stack[-1].tag)
                     pos = self.stack[-1].start
                 else:
-                    msg = "no opening tag for '</{0}>'".format(tag)
+                    msg = "no opening tag for '</{}>'".format(tag)
                     pos = self.getpos()
                 raise HTMLParser.HTMLParseError(msg, pos)
 
@@ -126,17 +114,14 @@ class Parser(HTMLParser.HTMLParser):
             self.stack.pop(-1)
 
     def get_current_node(self):
-        """Return the current element (the one that enclose our cursor
-        position)."""
+        """To return the current element (the one that enclose our cursor position)."""
         for c in self.tree.children:
-            node, depth = self._closest_node(
-                    c, 0, None, -1, self.misc.cursor())
+            node, depth = self._closest_node(c, 0, None, -1, v.cursor())
             if node:
                 return node
 
     def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
-        """Finds the closest element that encloses our current cursor
-        position."""
+        """To find the closest element that encloses our current cursor position."""
         if not tree.start or not tree.end:
             msg = "malformed tag found"
             if not tree.start:
@@ -186,8 +171,7 @@ class Parser(HTMLParser.HTMLParser):
                 rev = False
 
             for child in (reversed(tree.children) if rev else tree.children):
-                n, d = self._closest_node(
-                    child, depth + 1, closest_node, closest_depth, pos)
+                n, d = self._closest_node(child, depth + 1, closest_node, closest_depth, pos)
 
                 if d > closest_depth:
                     # a child of tree node is closest to the current position.
@@ -207,7 +191,7 @@ class Parser(HTMLParser.HTMLParser):
             return closest_node, closest_depth
 
     def print_dom_tree(self, indent=2):
-        """Prints the parsed DOM tree."""
+        """To print the parsed DOM tree."""
 
         def _print_tree(tree, depth, indent):
             """Internal function for printing the HTML tree."""
@@ -219,7 +203,7 @@ class Parser(HTMLParser.HTMLParser):
             _print_tree(c, 0, indent)
 
     def all_nodes(self):
-        """Returns all DOM nodes as a generator."""
+        """To return all DOM nodes as a generator."""
 
         def _flatten(tree):
             g = [tree]
@@ -229,13 +213,10 @@ class Parser(HTMLParser.HTMLParser):
 
         if self.tree.children:
             return _flatten(self.tree.children[0])
-        else:
-            return []
+        return []
 
     def get_error(self):
-        """Returns the last known error."""
+        """To return the last known error."""
         if self.last_known_error is not None:
-            return "Error found at {pos}, type: {msg}".format(
-                        **self.last_known_error)
-        else:
-            return "All should be fine!"
+            return "Error found at {pos}, type: {msg}".format(**self.last_known_error)
+        return "All should be fine!"
