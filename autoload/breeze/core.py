@@ -95,71 +95,65 @@ class Breeze:
         v.clear_hl('BreezeHl')
 
         node = self.parser.get_current_node()
-        if node:
-            line, startcol = node.start[0], node.start[1]+1
-            endcol = startcol + len(node.tag) + 1
-            patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
-                line, startcol, endcol)
+        if not node:
+            return
+
+        line, scol = node.start[0], node.start[1]+1
+        ecol = scol + len(node.tag) + 1
+        patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
+        v.highlight("BreezeHl", patt)
+
+        if node.tag not in self.empty_tags:
+            line, scol = node.end[0], node.end[1]+1
+            ecol = scol + len(node.tag) + 2
+            patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
             v.highlight("BreezeHl", patt)
 
-            if node.tag not in self.empty_tags:
-
-                line, startcol = node.end[0], node.end[1]+1
-                endcol = startcol + len(node.tag) + 2
-                patt = "\\%{0}l\\%>{1}c\%<{2}c".format(
-                    line, startcol, endcol)
-                v.highlight("BreezeHl", patt)
-
     @parse_current_buffer
-    def highlight_element_block(self, node=None):
-        """Highlights the current element.
+    def highlight_element_block(self):
+        """Highlights the current element as a whole block.
 
         This works exactly as the 'vat' motion.
         """
         v.clear_hl('BreezeHl')
 
-        if node is None:
-            node = self.parser.get_current_node()
+        node = self.parser.get_current_node()
+        if not node:
+            return
 
-        if node:
+        if node.tag not in self.empty_tags and node.start[0] != node.end[0]:
 
-            if (node.tag not in self.empty_tags
-                and node.start[0] != node.end[0]):
+            # highlight first line
+            sline, scol = node.start[0], node.start[1]
+            patt = "\\%{}l\\%>{}c".format(sline, scol)
+            v.highlight("BreezeHl", patt)
 
-                # highlight first line
-                sline, startcol = node.start[0], node.start[1]
-                endcol = startcol + len(node.tag) + 1
-                patt = "\\%{0}l\\%>{1}c".format(
-                    sline, startcol, endcol)
-                v.highlight("BreezeHl", patt)
+            # highlight end line
+            eline, scol = node.end[0], node.end[1]+1
+            ecol = scol + len(node.tag) + 3
+            closing = "\\%{}l\\%<{}c".format(eline, ecol)
+            v.highlight("BreezeHl", patt)
 
-                # highlight end line
-                eline, startcol = node.end[0], node.end[1]+1
-                endcol = startcol + len(node.tag) + 3
-                closing = "\\%{0}l\\%<{1}c".format(
-                    eline, endcol)
-                v.highlight("BreezeHl", patt)
+            # highlight lines between start and end tag
+            patt = "\\%>{}l\\%<{}l".format(sline, eline)
+            v.highlight("BreezeHl", patt)
 
-                # highlight lines between start and end tag
-                patt = "\\%>{0}l\\%<{1}l".format(sline, eline)
+        else:
+
+            if node.tag in self.empty_tags:
+
+                # highlight empty tag
+                sline, scol = node.start[0], node.start[1]
+                patt = "\\%{}l\\%>{}c".format(sline, scol)
                 v.highlight("BreezeHl", patt)
 
             else:
 
-                if node.tag in self.empty_tags:
-                    # highlight empty tag
-                    sline, startcol = node.start[0], node.start[1]
-                    endcol = startcol + len(node.tag) + 1
-                    patt = "\\%{0}l\\%>{1}c".format(
-                        sline, startcol, endcol)
-                    v.highlight("BreezeHl", patt)
-                else:
-                    # highlight tag on a single line
-                    line, startcol = node.start[0], node.start[1]
-                    endcol = node.end[1] + len(node.tag) + 4
-                    patt = "\\%{0}l\\%>{1}c\\%<{2}c".format(
-                        line, startcol, endcol)
-                    v.highlight("BreezeHl", patt)
+                # highlight tag on a single line
+                line, scol = node.start[0], node.start[1]
+                ecol = node.end[1] + len(node.tag) + 4
+                patt = "\\%{}l\\%>{}c\\%<{}c".format(line, scol, ecol)
+                v.highlight("BreezeHl", patt)
 
     @remember_curr_pos
     @parse_current_buffer
@@ -172,7 +166,6 @@ class Breeze:
         """
         node = self.parser.get_current_node()
         if node:
-
             row, col = v.cursor()
             if row != node.start[0]:
                 target = node.start
@@ -191,95 +184,79 @@ class Breeze:
     @remember_curr_pos
     @parse_current_buffer
     def goto_next_sibling(self):
-        """Moves the cursor to the next sibling node."""
+        """To move the cursor to the next sibling node."""
         node = self.parser.get_current_node()
-        if node:
-            if node.parent:
-                ch = node.parent.children
-                for i, c in enumerate(ch):
-                    if c.start == node.start and c.end == node.end:
-                        if i + 1 < len(ch):
-                            row, col = ch[i+1].start
-                            if not settings.get("jump_to_angle_bracket", bool):
-                                col += 1
-                            v.cursor((row, col))
-                        else:
-                            v.echom("no siblings found")
-            else:
-                v.echom("no more siblings")
+        if node and node.parent:
+            ch = node.parent.children
+            for i, c in enumerate(ch):
+                if c.start == node.start and c.end == node.end and i + 1 < len(ch):
+                    row, col = ch[i+1].start
+                    if not settings.get("jump_to_angle_bracket", bool):
+                        col += 1
+                    v.cursor((row, col))
 
     @remember_curr_pos
-    @        parse_current_buffer
+    @parse_current_buffer
     def goto_prev_sibling(self):
-        """Moves the cursor to the previous sibling node."""
+        """To move the cursor to the previous sibling node."""
         node = self.parser.get_current_node()
-        if node:
-            if node.parent:
-                ch = node.parent.children
-                for i, c in enumerate(ch):
-                    if c.start == node.start and c.end == node.end:
-                        if i - 1 >= 0:
-                            row, col = ch[i-1].start
-                            if not settings.get("jump_to_angle_bracket", bool):
-                                col += 1
-                            v.cursor((row, col))
-                        else:
-                            v.echom("no siblings found")
-            else:
-                v.echom("no previous siblings")
+        if node and node.parent:
+            ch = node.parent.children
+            for i, c in enumerate(ch):
+                if c.start == node.start and c.end == node.end and i - 1 >= 0:
+                    row, col = ch[i-1].start
+                    if not settings.get("jump_to_angle_bracket", bool):
+                        col += 1
+                    v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
     def goto_first_sibling(self):
-        """Moves the cursor to the first sibling node."""
+        """To move the cursor to the first sibling node."""
         node = self.parser.get_current_node()
-        if node:
-            if node.parent:
-                row, col = node.parent.children[0].start
-                if not settings.get("jump_to_angle_bracket", bool):
-                    col += 1
-                v.cursor((row, col))
+        if node and node.parent:
+            row, col = node.parent.children[0].start
+            if not settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
     def goto_last_sibling(self):
-        """Moves the cursor to the last sibling node."""
+        """To move the cursor to the last sibling node."""
         node = self.parser.get_current_node()
-        if node:
-            if node.parent:
-                row, col = node.parent.children[-1].start
-                if not settings.get("jump_to_angle_bracket", bool):
-                    col += 1
-                v.cursor((row, col))
+        if node and node.parent:
+            row, col = node.parent.children[-1].start
+            if not settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
     def goto_first_child(self):
-        """Moves the cursor to the first child of the current node."""
+        """To move the cursor to the first child of the current node."""
         node = self.parser.get_current_node()
-        if node:
-            if node.children:
-                row, col = node.children[0].start
-                if not settings.get("jump_to_angle_bracket", bool):
-                    col += 1
-                v.cursor((row, col))
+        if node and node.children:
+            row, col = node.children[0].start
+            if not settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
     def goto_last_child(self):
-        """Moves the cursor to the last child of the current node."""
+        """To move the cursor to the last child of the current node."""
         node = self.parser.get_current_node()
-        if node:
-            if node.children:
-                row, col = node.children[-1].start
-                if not settings.get("jump_to_angle_bracket", bool):
-                    col += 1
-                v.cursor((row, col))
+        if node and node.children:
+            row, col = node.children[-1].start
+            if not settings.get("jump_to_angle_bracket", bool):
+                col += 1
+            v.cursor((row, col))
 
     @remember_curr_pos
     @parse_current_buffer
     def goto_parent(self):
-        """Moves the cursor to the parent of the current node."""
+        """To move the cursor to the parent of the current node."""
         node = self.parser.get_current_node()
         if node:
             if node.parent.tag != "root":
@@ -292,10 +269,9 @@ class Breeze:
 
     @parse_current_buffer
     def print_dom(self):
-        """Prints the DOM tree."""
+        """To print the DOM tree."""
         self.parser.print_dom_tree()
 
     def whats_wrong(self):
-        """If something went wrong during the last parse,
-        tell the user about it."""
+        """To tell the user about the last encountered problem."""
         v.echom(self.parser.get_error())
