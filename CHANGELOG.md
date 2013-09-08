@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1 (2013-09-08)
+## 2.0 (2013-09-08)
 + Add support for custom filetypes via the `breeze_active_filetypes` option.
 * Now jump marks are displayed in alphabetical order.
 * Fix tag jumping when dealing with multiple HTML tags on the same line.

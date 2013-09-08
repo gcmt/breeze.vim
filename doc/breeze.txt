@@ -264,7 +264,7 @@ Default: < the value of |'breeze_hl_color'| >
 ==============================================================================
 6. Changelog                                                *breeze-changelog*
 
-v1.1 (2013-09-08)
+v2.0 (2013-09-08)
 
     * Add support for custom filetypes via the `breeze_active_filetypes` option.
     * Now jump marks are displayed in alphabetical order.
@@ -272,6 +272,7 @@ v1.1 (2013-09-08)
     * Renamed option: `breeze_hl_element` -> `breeze_highlight_curr_element`.
     * New options: `breeze_jump_to_angle_bracket`.
     * New commands: `BreezeWhatsWrong`, `BreezeFirstSibling`, `BreezeLastSibling`.
+    * Removed commands: `BreezeHlElementBlock`.
     * Other minor improvements and fixes.
 
 v1.0 (2013-04-29)
