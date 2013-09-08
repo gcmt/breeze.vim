@@ -12,6 +12,7 @@ import vim
 import itertools
 
 from breeze.utils import v
+from breeze.utils import misc
 
 try:
     # python 3
@@ -45,10 +46,6 @@ class Parser(HTMLParser.HTMLParser):
         self.success = False
         self.tree = Node(tag="root")
         self.stack = [self.tree]
-        self.empty_tags = dict((k, True) for k in
-            ["br", "base", "hr", "meta", "link", "base", "link",
-            "source", "meta", "img", "embed", "param", "area", "col", "input",
-            "command", "keygen", "track", "wbr"])
 
     def feed(self, buffer):
         """To generate a brand new tree at each call."""
@@ -79,11 +76,13 @@ class Parser(HTMLParser.HTMLParser):
         the handle_startendtag tags by ourselves and we make sure we don't run
         infinite recursive calls with the skip_emptytag_check parameter.
         """
-        if not skip_emptytag_check and tag in self.empty_tags:
+        if not skip_emptytag_check and tag in misc.empty_tags:
             self.handle_startendtag(tag, attrs)
             return
 
         if self.stack:
+            # Note: getpos() return 1-indexed line numbers and 0-indexed
+            # column numbers
             node = Node(tag, self.get_starttag_text(), self.stack[-1], self.getpos())
             self.stack[-1].children.append(node)
             self.stack.append(node)
@@ -134,7 +133,7 @@ class Parser(HTMLParser.HTMLParser):
         startrow, startcol = tree.start[0], tree.start[1]
         endrow = tree.end[0]
 
-        if tree.tag in self.empty_tags:
+        if tree.tag in misc.empty_tags:
             endcol = tree.start[1] + len(tree.starttag_text)
         else:
             endcol = tree.end[1] + len(tree.tag) + 2

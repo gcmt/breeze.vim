@@ -12,6 +12,7 @@ import vim
 from breeze import parser
 from breeze import jumper
 from breeze.utils import v
+from breeze.utils import misc
 from breeze.utils import settings
 
 
@@ -20,18 +21,10 @@ class Breeze:
     def __init__(self):
         self.parser = parser.Parser()
         self.jumper = jumper.Jumper(self)
-
         self.setup_colors()
-
         # caching stuff
         self.refresh_cache = True
         self.cache = None
-
-        # empty tags
-        self.empty_tags = dict((k, True) for k in
-            ["br", "base", "hr", "meta", "link", "base", "source",
-             "img", "embed", "param", "area", "col", "input", "command",
-             "keygen", "track", "wbr"])
 
     def parse_current_buffer(f):
         """To provide some naive form of caching.
@@ -103,7 +96,7 @@ class Breeze:
         patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
         v.highlight("BreezeHl", patt)
 
-        if node.tag not in self.empty_tags:
+        if node.tag not in misc.empty_tags:
             line, scol = node.end[0], node.end[1]+1
             ecol = scol + len(node.tag) + 2
             patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
@@ -121,7 +114,7 @@ class Breeze:
         if not node:
             return
 
-        if node.tag not in self.empty_tags and node.start[0] != node.end[0]:
+        if node.tag not in misc.empty_tags and node.start[0] != node.end[0]:
 
             # highlight first line
             sline, scol = node.start[0], node.start[1]
@@ -140,7 +133,7 @@ class Breeze:
 
         else:
 
-            if node.tag in self.empty_tags:
+            if node.tag in misc.empty_tags:
 
                 # highlight empty tag
                 sline, scol = node.start[0], node.start[1]
