@@ -16,17 +16,18 @@ The recommended way of installing the plugin is via
 or [Neobundle](https://github.com/Shougo/neobundle.vim)
 
 ### Houston, we have a problem
-For any functionality listed below, if it seems that something is not working correctly
-(e.g. unresponsive commands), run the `BreezeWhatsWrong` command and you will be shown 
-the origin of the problem.
+For any functionality listed below, if it seems that something is not working
+correctly (e.g. unresponsive commands), run the `BreezeWhatsWrong` command and
+you will be shown the origin of the problem, usually something related to bad
+formatted HTML.
 
 
 ## Tag jumping
 ![Screenshot](extra/jump.gif "Tag jumping inspired by vim-easymotion")   
 
-As you can see this way of navigating the document is heavily inspired by vim-easymotion.
-To jump to following tags use the command `BreezeJumpF`. 
-Use `BreezeJumpB` to jump to preceding tags.
+As you can see this way of navigating the document is heavily inspired by
+vim-easymotion. You can use the command `BreezeJumpF` to jump to following
+tags and the `BreezeJumpB` command to jump to preceding tags.
 
 When you run one of the aforementioned commands, Breeze displays
 colored marks on the tags you can jump to and wait for your choice.
@@ -38,11 +39,10 @@ key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
 ## Tag matching and current element highlighting
 ![Screenshot](extra/high.gif "Current element highlighting")   
 
-By default Breeze highlights the opening and closing tags of the current element.
-To turn off this functionality you can set `g:breeze_hl_element` to 0. However,
-you always have at your disposal the `BreezeHlElement` command to highlight the current element.
-If you prefer highlighting the whole element as a block you can use the `BreezeHlElementBlock` command
-(just like the `vat` vim motion. However it seems not working properly with self-closing tags).
+By default Breeze highlights the opening and closing tags of the current
+element. To turn off this functionality you can set
+`g:breeze_highlight_curr_element` to 0. However, you always have at your
+disposal the `BreezeHlElement` command to highlight the current element.
 
 Another useful command is `BreezeMatchTag`. If the cursor is on an opening tag,
 this command moves the cursor to the corresponding closing tag, and vice-versa.
@@ -50,18 +50,19 @@ If the command is called within an element, this command moves the cursor to
 its opening tag. Remember that you can easily jump back to previous positions
 with `CTRL+O`.
 
-**Limitations:** At the moment current element highlighting is still inefficient for large files
-and your movements may become quite slow. So you may be better off disabling the feature for such files
-until I'll come up with a fast solution.
+**Limitations:** At the moment current element highlighting is still
+inefficient for large files and your movements may become quite slow when the
+file is modified.
 
 
 ## DOM navigation
 ![Screenshot](extra/dom.gif "DOM navigation")   
 
-The available commands for DOM navigation cover only low level movements at the
-moment but might be useful for exploring dense HTML files. You can use commands
-*such as `BreezeNextSibling`, `BreezePrevSibling`, `BreezeFirstSibling`, `BreezeLastSibling`,    
-`BreezeFirstChild`, `BreezeLastChild` and BreezeParent`.    
+Commands for DOM navigation cover only low level movements at the moment but
+might be useful for exploring dense HTML files. You can use commands
+such as `BreezeNextSibling`, `BreezePrevSibling`, `BreezeFirstSibling`,
+`BreezeLastSibling`, `BreezeFirstChild`, `BreezeLastChild` and `BreezeParent`.    
+
 
 ## Changelog
 See [CHANGELOG.md](CHANGELOG.md).

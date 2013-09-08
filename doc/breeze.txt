@@ -83,11 +83,6 @@ By default Breeze highlights the opening and closing tags of the current
 element. To turn off this functionality you can set 
 |'breeze_highlight_curr_element'| to 0. 
 
-------------------------------------------------------------------------------
-:BreezeHlElementBlock                                   *BreezeHlElementBlock*
-
-This command highlights the current HTML element as a block.
-
 
 ==============================================================================
 4. DOM Navigation                                      *breeze-dom-navigation*
