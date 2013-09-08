@@ -23,10 +23,9 @@ let g:breeze_loaded = 1
 " basic
 
 let g:breeze_active_filetypes =
-    \ "*.html,*.htm,*.xhtml,*.xml," . get(g:, "breeze_active_filetypes", "")
-
-let g:breeze_hl_element =
-    \ get(g:, 'breeze_hl_element', 1)
+    \ "*.html,*.htm,*.xhtml,*.xml," . get(g:, 'breeze_active_filetypes', '')
+    " deprecated
+    \ . get(g:, 'breeze_highlight_filename_patterns', '')
 
 let g:breeze_jump_to_angle_bracket =
     \ get(g:, 'breeze_jump_to_angle_bracket', 0)
