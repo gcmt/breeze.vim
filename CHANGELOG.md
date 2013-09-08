@@ -7,6 +7,7 @@
 * Renamed option: `breeze_hl_element` -> `breeze_highlight_curr_element`.
 + New options: `breeze_jump_to_angle_bracket`.
 + New commands: `BreezeWhatsWrong`, `BreezeFirstSibling`, `BreezeLastSibling`.
+- Removed commands: `BreezeHlElementBlock`.
 * Other minor improvements and fixes.
 
 ## 1.0 (2013-04-29)
