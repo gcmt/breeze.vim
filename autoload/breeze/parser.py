@@ -122,11 +122,10 @@ class Parser(HTMLParser.HTMLParser):
     def _closest_node(self, tree, depth, closest_node, closest_depth, pos):
         """To find the closest element that encloses our current cursor position."""
         if not tree.start or not tree.end:
-            msg = "malformed tag found"
             if not tree.start:
-                self.last_known_error = dict(msg=msg, pos=tree.end)
+                self.last_known_error = dict(msg="malformed tag found", pos=tree.end)
             if not tree.end:
-                self.last_known_error = dict(msg=msg, pos=tree.start)
+                self.last_known_error = dict(msg="malformed tag found", pos=tree.start)
             return (None, -1)
 
         row, col = pos
@@ -145,7 +144,7 @@ class Parser(HTMLParser.HTMLParser):
             cond = True
         elif endrow == row and startrow != row and col <= endcol:
             cond = True
-        elif startrow == row and endrow == row and startcol <= col <= endcol:
+        elif startrow == row and endrow == row and startcol <= col < endcol:
             cond = True
         else:
             cond = False
