@@ -102,52 +102,6 @@ class Breeze:
             patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
             v.highlight("BreezeHl", patt)
 
-    @parse_current_buffer
-    def highlight_element_block(self):
-        """Highlights the current element as a whole block.
-
-        This works exactly as the 'vat' motion.
-        """
-        v.clear_hl('BreezeHl')
-
-        node = self.parser.get_current_node()
-        if not node:
-            return
-
-        if node.tag not in misc.empty_tags and node.start[0] != node.end[0]:
-
-            # highlight first line
-            sline, scol = node.start[0], node.start[1]
-            patt = "\\%{}l\\%>{}c".format(sline, scol)
-            v.highlight("BreezeHl", patt)
-
-            # highlight end line
-            eline, scol = node.end[0], node.end[1]+1
-            ecol = scol + len(node.tag) + 3
-            closing = "\\%{}l\\%<{}c".format(eline, ecol)
-            v.highlight("BreezeHl", patt)
-
-            # highlight lines between start and end tag
-            patt = "\\%>{}l\\%<{}l".format(sline, eline)
-            v.highlight("BreezeHl", patt)
-
-        else:
-
-            if node.tag in misc.empty_tags:
-
-                # highlight empty tag
-                sline, scol = node.start[0], node.start[1]
-                patt = "\\%{}l\\%>{}c".format(sline, scol)
-                v.highlight("BreezeHl", patt)
-
-            else:
-
-                # highlight tag on a single line
-                line, scol = node.start[0], node.start[1]
-                ecol = node.end[1] + len(node.tag) + 4
-                patt = "\\%{}l\\%>{}c\\%<{}c".format(line, scol, ecol)
-                v.highlight("BreezeHl", patt)
-
     @remember_curr_pos
     @parse_current_buffer
     def match_tag(self):

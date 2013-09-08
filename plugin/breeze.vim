@@ -67,7 +67,6 @@ command! BreezeJumpB call breeze#JumpBackward()
 " tag matching / highlighting
 command! BreezeMatchTag call breeze#MatchTag()
 command! BreezeHlElement call breeze#HighlightElement()
-command! BreezeHlElementBlock call breeze#HighlightElementBlock()
 
 " dom navigation
 command! BreezeNextSibling call breeze#NextSibling()

@@ -38,10 +38,6 @@ fu! breeze#HighlightElement()
     py breeze_plugin.highlight_curr_element()
 endfu
 
-fu! breeze#HighlightElementBlock()
-    py breeze_plugin.highlight_element_block()
-endfu
-
 " dom navigation
 
 fu! breeze#NextSibling()
