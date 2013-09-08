@@ -4,7 +4,7 @@
 " Mantainer: Giacomo Comitti - https://github.com/gcmt
 " Url: https://github.com/gcmt/breeze.vim
 " License: MIT
-" Last Changed: 7 Sep 2013
+" Last Changed: 8 Sep 2013
 " ============================================================================
 
 
@@ -26,6 +26,12 @@ let g:breeze_active_filetypes =
     \ "*.html,*.htm,*.xhtml,*.xml," . get(g:, 'breeze_active_filetypes', '')
     " deprecated
     \ . get(g:, 'breeze_highlight_filename_patterns', '')
+
+let g:breeze_highlight_curr_element =
+    \ get(g:, 'breeze_highlight_curr_element', 1)
+" deprecated
+let g:breeze_highlight_curr_element =
+    \ get(g:, 'breeze_hl_element', g:breeze_highlight_curr_element)
 
 let g:breeze_jump_to_angle_bracket =
     \ get(g:, 'breeze_jump_to_angle_bracket', 0)

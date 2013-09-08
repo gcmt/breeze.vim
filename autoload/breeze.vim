@@ -99,7 +99,7 @@ augroup breeze_plugin
     exe 'au InsertEnter,InsertLeave '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
     exe 'au BufWritePost '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
 
-    if g:breeze_hl_element
+    if g:breeze_highlight_curr_element
         exe 'au CursorMoved '.g:breeze_active_filetypes.' py breeze_plugin.highlight_curr_element()'
         au InsertEnter *.* py breeze.utils.v.clear_hl("BreezeHl")
     endif
