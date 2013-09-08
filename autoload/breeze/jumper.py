@@ -100,13 +100,13 @@ class Jumper(object):
         """To ask the user where to jump."""
         key = input.Input()
         while True:
+            v.redraw()
             vim.command('echohl Question|echo " target: "|echohl None')
             key.get()
             if key.ESC or key.INTERRUPT:
                 return
             elif key.CHAR:
                 return key.CHAR
-            v.redraw()
 
     def _clear_jump_marks(self, table):
         """To clear jump marks."""
