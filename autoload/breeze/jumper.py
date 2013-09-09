@@ -30,7 +30,7 @@ class Jumper(object):
 
     def jump(self, backward=False):
         """To display jump marks and move to the selected jump mark."""
-        table = self._show_jump_marks(backward)
+        table = self._show_jump_marks(v.cursor(), backward)
         choice = None
         while choice not in table:
             choice = self._ask_target_key()
@@ -46,7 +46,7 @@ class Jumper(object):
                 col += 1
             v.cursor((row, col))
 
-    def _show_jump_marks(self, backward=False):
+    def _show_jump_marks(self, curr_pos, backward=False):
         """To display jump marks."""
         top, bot = v.window_bundaries()
         v.highlight("BreezeShade", "\\%>{}l\\%<{}l".format(top-1, bot+1))
@@ -54,37 +54,30 @@ class Jumper(object):
         table = {}
         jump_marks = self.jump_marks[:]
         vim.command("setl modifiable noreadonly")
-
-        top, bot = v.window_bundaries()
-        nodes = [node for node in self.plug.parser.all_nodes()
-                 if node.start[0] >= top and node.start[0] <= bot]
-        if backward:
-            nodes = reversed(nodes)
-
         vim.command("try|undojoin|catch|endtry")
-        curr_pos = v.cursor()
-        curr_row, curr_col = curr_pos[0]-1, curr_pos[1]
+
+        nodes = filter(lambda n: top <= n.start[0] <= bot, self.plug.parser.all_nodes())
+        nodes = reversed(nodes) if backward else nodes
 
         for node in nodes:
 
-            tag_row, tag_col = node.start[0]-1, node.start[1]+1
+            if not jump_marks:
+                break
 
-            mark = None
-            if jump_marks:
+            # both trow and tcol are 1-indexed
+            trow, tcol = node.start[0], node.start[1]
+            crow, ccol = curr_pos[0], curr_pos[1]-1
 
-                if backward:
-                    if tag_row < curr_row or (tag_row == curr_row and tag_col < curr_col):
-                        mark = jump_marks[0]
-                        jump_marks.pop(0)
-                else:
-                    if tag_row > curr_row or (tag_row == curr_row and tag_col > curr_col):
-                        mark = jump_marks[0]
-                        jump_marks.pop(0)
+            if backward:
+                if not (trow < crow or (trow == crow and tcol < ccol)):
+                    continue
+            else:
+                if not (trow > crow or (trow == crow and tcol > ccol)):
+                    continue
 
-            if mark:
-                old = v.subst_char(v.buf(), mark, tag_row, tag_col)
-                self._highlight_jump_mark((tag_row+1, tag_col+1))
-                table[mark] = (node.start, old)
+            old = v.subst_char(v.buf(), jump_marks[0], trow-1, tcol+1)
+            self._highlight_jump_mark((trow, tcol+2))
+            table[jump_marks.pop(0)] = (node.start, old)
 
         vim.command("setl nomodified")
         v.redraw()
