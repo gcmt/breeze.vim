@@ -28,6 +28,11 @@ def redraw():
     vim.command('redraw')
 
 
+def buf():
+    """To return the curent vim buffer."""
+    return vim.current.buffer
+
+
 def cursor(target=None):
     """To move the cursor or return the current cursor position."""
     if not target:

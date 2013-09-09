@@ -52,7 +52,6 @@ class Jumper(object):
         v.highlight("BreezeShade", "\\%>{}l\\%<{}l".format(top-1, bot+1))
 
         table = {}
-        buf = vim.current.buffer
         jump_marks = self.jump_marks[:]
         vim.command("setl modifiable noreadonly")
 
@@ -83,7 +82,7 @@ class Jumper(object):
                         jump_marks.pop(0)
 
             if mark:
-                old = v.subst_char(buf, mark, tag_row, tag_col)
+                old = v.subst_char(v.buf(), mark, tag_row, tag_col)
                 self._highlight_jump_mark((tag_row+1, tag_col+1))
                 table[mark] = (node.start, old)
 
@@ -115,7 +114,7 @@ class Jumper(object):
         for mark, tpl in table.items():
             pos, old = tpl
             row, col = pos[0]-1, pos[1]+1
-            v.subst_char(vim.current.buffer, old, row, col)
+            v.subst_char(v.buf(), old, row, col)
 
         vim.command("setl nomodified")
         v.redraw()

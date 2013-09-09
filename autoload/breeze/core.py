@@ -34,7 +34,7 @@ class Breeze:
         """
         def wrapper(self, *args, **kwargs):
             if self.refresh_cache or vim.eval("&mod") == '1':
-                self.parser.feed(vim.current.buffer)
+                self.parser.feed(v.buf())
                 if self.parser.success:
                     self.cache = self.parser.tree
                     self.refresh_cache = False
