@@ -8,7 +8,7 @@
 
 ### Requirements
 * Vim compiled with python 2.6+
-* Linux, Mac OS X (untested on Windows)
+* Linux, Mac, Windows
 
 ### Installation
 The recommended way of installing the plugin is via 
