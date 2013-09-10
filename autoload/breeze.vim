@@ -7,8 +7,9 @@
 let s:current_folder = expand("<sfile>:p:h")
 
 fu! breeze#init()
-    py import vim, sys, breeze.core
+    py import vim, sys
     py sys.path.insert(0, vim.eval("s:current_folder"))
+    py import breeze.core
     py breeze_plugin = breeze.core.Breeze()
 endfu
 
