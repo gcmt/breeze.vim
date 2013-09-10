@@ -59,14 +59,14 @@ class Breeze:
     def setup_colors(self):
         """To setup Breeze highlight groups."""
         postfix = "" if vim.eval("&bg") == "light" else "_darkbg"
-        shade = settings.get("shade_color{}".format(postfix))
-        mark = settings.get("jumpmark_color{}".format(postfix))
-        hl = settings.get("hl_color{}".format(postfix))
-        for g, color in (("Shade", shade), ("JumpMark", mark), ("Hl", hl)):
-            if "=" in color:
-                vim.command("hi Breeze{} {}".format(g, color))
-            else:
-                vim.command("hi link Breeze{} {}".format(g, color))
+        colors = {
+            "BreezeShade": settings.get("shade_color{}".format(postfix)),
+            "BreezeJumpMark": settings.get("jumpmark_color{}".format(postfix)),
+            "BreezeHl": settings.get("hl_color{}".format(postfix))
+        }
+        for group, color in colors.items():
+            link = "" if "=" in color else "link"
+            vim.command("hi {} {} {}".format(link, group, color))
 
     @remember_curr_pos
     @parse_current_buffer
