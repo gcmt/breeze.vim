@@ -204,14 +204,15 @@ class Parser(HTMLParser.HTMLParser):
         """To return all DOM nodes as a generator."""
 
         def _flatten(tree):
-            g = [tree]
+            nodes = [tree]
             for c in tree.children:
-                g = itertools.chain(g, _flatten(c))
-            return g
+                nodes += _flatten(c)
+            return nodes
 
-        if self.tree.children:
-            return _flatten(self.tree.children[0])
-        return []
+        nodes = []
+        for c in self.tree.children:
+            nodes += _flatten(c)
+        return nodes
 
     def get_error(self):
         """To return the last known error."""
