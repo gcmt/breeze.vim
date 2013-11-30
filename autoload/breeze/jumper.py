@@ -26,7 +26,6 @@ class Jumper(object):
 
     def __init__(self, plug):
         self.plug = plug
-        self.jump_marks = list(string.letters)
 
     def jump(self, backward=False):
         """To display jump marks and move to the selected jump mark."""
@@ -52,7 +51,7 @@ class Jumper(object):
         v.highlight("BreezeShade", "\\%>{}l\\%<{}l".format(top-1, bot+1))
 
         table = {}
-        jump_marks = self.jump_marks[:]
+        jump_marks = list(string.letters)
         vim.command("setl modifiable noreadonly")
         vim.command("try|undojoin|catch|endtry")
 
