@@ -15,13 +15,13 @@ prefix = 'g:breeze_'
 def set(name, value):
     """To set a vim variable to a given value."""
     if isinstance(value, basestring):
-        val = "'{}'".format(value)
+        val = "'{0}'".format(value)
     elif isinstance(value, bool):
         val = 1 if value else 0
     else:
         val = value
 
-    vim.command("let {} = {}".format(prefix + name, val))
+    vim.command("let {0} = {0}".format(prefix + name, val))
 
 
 def get(name, type=None):

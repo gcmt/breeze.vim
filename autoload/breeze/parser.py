@@ -32,10 +32,10 @@ class Node:
         self.children = []  # a list of Nodes
 
     def __str__(self):
-        return "<{} start={} end={}>".format(self.tag, self.start, self.end)
+        return "<{0} start={1} end={2}>".format(self.tag, self.start, self.end)
 
     def __repr__(self):
-        return "<{} start={} end={}>".format(self.tag, self.start, self.end)
+        return "<{0} start={1} end={2}>".format(self.tag, self.start, self.end)
 
 
 class Parser(HTMLParser.HTMLParser):
@@ -101,11 +101,11 @@ class Parser(HTMLParser.HTMLParser):
             if tag != self.stack[-1].tag:
                 # tag mismatch
                 if any(n.tag == tag for n in self.stack):
-                    msg = "no closing tag for '<{}>'".format(
+                    msg = "no closing tag for '<{0}>'".format(
                         self.stack[-1].tag)
                     pos = self.stack[-1].start
                 else:
-                    msg = "no opening tag for '</{}>'".format(tag)
+                    msg = "no opening tag for '</{0}>'".format(tag)
                     pos = self.getpos()
                 raise HTMLParser.HTMLParseError(msg, pos)
 

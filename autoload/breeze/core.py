@@ -60,13 +60,13 @@ class Breeze:
         """To setup Breeze highlight groups."""
         postfix = "" if vim.eval("&bg") == "light" else "_darkbg"
         colors = {
-            "BreezeShade": settings.get("shade_color{}".format(postfix)),
-            "BreezeJumpMark": settings.get("jumpmark_color{}".format(postfix)),
-            "BreezeHl": settings.get("hl_color{}".format(postfix))
+            "BreezeShade": settings.get("shade_color{0}".format(postfix)),
+            "BreezeJumpMark": settings.get("jumpmark_color{0}".format(postfix)),
+            "BreezeHl": settings.get("hl_color{0}".format(postfix))
         }
         for group, color in colors.items():
             link = "" if "=" in color else "link"
-            vim.command("hi {} {} {}".format(link, group, color))
+            vim.command("hi {0} {1} {2}".format(link, group, color))
 
     @remember_curr_pos
     @parse_current_buffer
@@ -93,13 +93,13 @@ class Breeze:
 
         line, scol = node.start[0], node.start[1]+1
         ecol = scol + len(node.tag) + 1
-        patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
+        patt = "\\%{0}l\\%>{1}c\%<{2}c".format(line, scol, ecol)
         v.highlight("BreezeHl", patt)
 
         if node.tag not in misc.empty_tags:
             line, scol = node.end[0], node.end[1]+1
             ecol = scol + len(node.tag) + 2
-            patt = "\\%{}l\\%>{}c\%<{}c".format(line, scol, ecol)
+            patt = "\\%{0}l\\%>{1}c\%<{2}c".format(line, scol, ecol)
             v.highlight("BreezeHl", patt)
 
     @remember_curr_pos

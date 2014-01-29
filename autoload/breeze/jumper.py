@@ -48,7 +48,7 @@ class Jumper(object):
     def _show_jump_marks(self, curr_pos, backward=False):
         """To display jump marks."""
         top, bot = v.window_bundaries()
-        v.highlight("BreezeShade", "\\%>{}l\\%<{}l".format(top-1, bot+1))
+        v.highlight("BreezeShade", "\\%>{0}l\\%<{1}l".format(top-1, bot+1))
 
         table = {}
         jump_marks = list(string.letters)
@@ -85,7 +85,7 @@ class Jumper(object):
 
     def _highlight_jump_mark(self, pos, special=False):
         """To highligt the jump mark at the given position."""
-        v.highlight("BreezeJumpMark", "\\%{}l\\%{}c".format(*pos))
+        v.highlight("BreezeJumpMark", "\\%{0}l\\%{1}c".format(*pos))
 
     def _ask_target_key(self):
         """To ask the user where to jump."""

@@ -51,11 +51,11 @@ class Input:
         if raw_char.startswith("<80><fc><80>"):
             self.MAC_CMD = True
             char = raw_char.replace("<80><fc><80>", "")
-            nr = vim.eval("char2nr('{}')".format(char))
+            nr = vim.eval("char2nr('{0}')".format(char))
         else:
             # we use str2nr in order to get a negative number as a result if
             # the user press a special key such as backspace
-            nr = int(vim.eval("str2nr('{}')".format(raw_char)))
+            nr = int(vim.eval("str2nr('{0}')".format(raw_char)))
 
         if nr != 0:
 
@@ -67,9 +67,9 @@ class Input:
                 self.TAB = True
             elif 1 <= nr <= 26:
                 self.CTRL = True
-                self.CHAR = vim.eval("nr2char({})".format(nr + 96)).decode('utf-8')
+                self.CHAR = vim.eval("nr2char({0})".format(nr + 96)).decode('utf-8')
             else:
-                self.CHAR = vim.eval("nr2char({})".format(nr)).decode('utf-8')
+                self.CHAR = vim.eval("nr2char({0})".format(nr)).decode('utf-8')
 
         else:
 

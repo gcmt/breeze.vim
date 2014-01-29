@@ -13,12 +13,12 @@ from breeze.utils import settings
 
 def echom(msg):
     """To display a message to the user via the command line."""
-    vim.command('echom "[breeze] {}"'.format(msg.replace('"', '\"')))
+    vim.command('echom "[breeze] {0}"'.format(msg.replace('"', '\"')))
 
 
 def echohl(msg, hlgroup):
     """To display a colored message to the user via the command line."""
-    vim.command("echohl {}".format(hlgroup))
+    vim.command("echohl {0}".format(hlgroup))
     echom(msg)
     vim.command("echohl None")
 
@@ -57,21 +57,21 @@ def window_bundaries():
 
     # restore position and changed options
     cursor(curr_pos)
-    vim.command("setlocal scrolloff={}".format(scrolloff))
+    vim.command("setlocal scrolloff={0}".format(scrolloff))
 
     return top, bot
 
 
 def highlight(group, patt, priority=10):
     """Wrapper of the matchadd() vim function."""
-    return vim.eval("matchadd('{}', '{}', {})".format(group, patt, priority))
+    return vim.eval("matchadd('{0}', '{1}', {2})".format(group, patt, priority))
 
 
 def clear_hl(*groups):
     """To clear Breeze highlightings."""
     for match in vim.eval("getmatches()"):
         if match['group'] in groups:
-            vim.command("call matchdelete({})".format(match['id']))
+            vim.command("call matchdelete({0})".format(match['id']))
 
 
 def subst_char(buffer, v, row, col):
