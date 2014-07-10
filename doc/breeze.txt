@@ -12,8 +12,9 @@ CONTENTS                                                     *breeze-contents*
         2. Usage ................................. |breeze-usage|
         3. Mappings .............................. |breeze-mappings|
         4. Settings .............................. |breeze-settings|
-        5. About ................................. |breeze-about|
-        6. License ............................... |breeze-license|
+	5. Appearance ............................ |breeze-appearance|
+        6. About ................................. |breeze-about|
+        7. License ............................... |breeze-license|
 
 
 ==============================================================================
@@ -103,7 +104,19 @@ Default: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 ==============================================================================
-5. About                                                        *breeze-about*
+5. Appearance                                              *breeze-appearance*
+
+You can change default colors with the highlight groups `BreezeJumpMark`,
+`BreezeShade` and `BreezePrompt`. Below an example of how you can change
+default colors:
+>
+    " put the following lines in your .vimrc
+    hi link BreezeShade String
+    hi BreezePrompt gui=bold
+<
+
+==============================================================================
+6. About                                                        *breeze-about*
 
 Author: Giacomo Comitti
 Contributors: https://github.com/gcmt/breeze.vim/contributors
@@ -111,7 +124,7 @@ Git repository: https://github.com/gcmt/breeze.vim
 
 
 ==============================================================================
-6. License                                                    *breeze-license*
+7. License                                                    *breeze-license*
 
 Copyright (c) 2014 Giacomo Comitti
 

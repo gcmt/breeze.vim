@@ -42,4 +42,11 @@ With this option you can set the marks used by Breeze to point out all the locat
 
 Default: `"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"`
 
+### Changing default colors
 
+You can change default colors with the highlight groups `BreezeJumpMark`, `BreezeShade` and `BreezePrompt`. Below an example of how you can change default colors:
+```vim
+" put the following lines in your .vimrc
+hi link BreezeShade String
+hi BreezePrompt gui=bold
+```
