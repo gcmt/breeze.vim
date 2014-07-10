@@ -30,15 +30,11 @@ This is all you have to know to start jumping around your HTML files. Just remem
 
 ### Settings
 
-**g:breeze\_prompt**
-
-With this option  you can set your own custom prompt.
+With '**g:breeze\_prompt**' you can set your own custom prompt. You can change its color with the highlight group `BreezePrompt`.
 
 Default: `" Target: "`
 
-**g:breeze\_marks**
-
-With this option you can set the marks used by Breeze to point out all the locations you can jump to.
+With '**g:breeze\_marks**' you can set the marks used by Breeze to point out all the locations you can jump to. You can change their color with the highlight group `BreezeJumpMark`.
 
 Default: `"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"`
 

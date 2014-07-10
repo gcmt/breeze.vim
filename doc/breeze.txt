@@ -90,7 +90,8 @@ cursor position.
 ------------------------------------------------------------------------------
 							   *'g:breeze_prompt'*
 
-With this option  you can set your own custom prompt.
+With this option  you can set your own custom prompt. You can change its
+color with the highlight group `BreezePrompt`.
 
 Default: " Target: "
 
@@ -98,7 +99,8 @@ Default: " Target: "
                                                             *'g:breeze_marks'*
 
 With this option you can set the marks used by Breeze to point out all the
-locations you can jump to.
+locations you can jump to. You can change their color with the highlight
+group `BreezeJumpMark`.
 
 Default: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
