@@ -1,104 +1,138 @@
-" autoload/breeze.vim
+" ============================================================================
+" File: autoload/breeze.vim
+" Description: HTML motions
+" Mantainer: Giacomo Comitti - https://github.com/gcmt
+" Url: https://github.com/gcmt/breeze.vim
+" License: MIT
+" ============================================================================
 
-
-" Init
-" ----------------------------------------------------------------------------
-
-let s:current_folder = expand("<sfile>:p:h")
-
-fu! breeze#init()
-    py import vim, sys
-    py sys.path.insert(0, vim.eval("s:current_folder"))
-    py import breeze.core
-    py breeze_plugin = breeze.core.Breeze()
+fu breeze#JumpTag(backward)
+    let marks = breeze#show_marks_for_tags(a:backward)
+    cal breeze#jump(marks)
+    cal breeze#clear_marks(marks)
 endfu
 
-call breeze#init()
-let g:breeze_initialized = 1
-
-" Wrappers
-" ----------------------------------------------------------------------------
-
-" tag jumping
-
-fu! breeze#JumpForward()
-    py breeze_plugin.jump_forward()
+fu breeze#JumpAttribute(backward)
+    let marks = breeze#show_marks_for_attributes(a:backward)
+    cal breeze#jump(marks)
+    cal breeze#clear_marks(marks)
 endfu
 
-fu! breeze#JumpBackward()
-    py breeze_plugin.jump_backward()
+" To ask the user where to jump and move there
+fu breeze#jump(marks)
+    if empty(a:marks) | return | end
+    normal! m'
+    while 1
+        redraw
+        cal breeze#show_prompt()
+        let choice = breeze#get_input()
+        if choice =~ "<C-C>\\|<ESC>" | break | end
+        if has_key(a:marks, choice)
+            let [line, col, oldchar] = get(a:marks, choice)
+            cal setpos(".", [0, line, col+1, 0])
+            break
+        end
+    endw
 endfu
 
-" tag matching / highlighting
-
-fu! breeze#MatchTag()
-    py breeze_plugin.match_tag()
+" To display the prompt
+fu breeze#show_prompt()
+    echohl BreezePrompt | echon g:breeze_prompt | echohl None
 endfu
 
-fu! breeze#HighlightElement()
-    py breeze_plugin.highlight_curr_element()
+" To display marks for HTML attributes
+fu breeze#show_marks_for_attributes(backward)
+    let stopline = a:backward ? line('w0') : line('w$')
+    let patt = "\\v(\\<[^>]{-})@<=(\\=)@<=(\"|')([^<]{-}\\>)@="
+    let marks = breeze#get_marks(patt, a:backward ? "b" : "W", stopline)
+    let marks = breeze#display_marks(marks)
+    return marks
 endfu
 
-" dom navigation
-
-fu! breeze#NextSibling()
-    py breeze_plugin.goto_next_sibling()
+" To display marks for HTML opening tags
+fu breeze#show_marks_for_tags(backward)
+    let stopline = a:backward ? line('w0') : line('w$')
+    let patt = "\\v\\<(/|!)@!"
+    let marks = breeze#get_marks(patt, a:backward ? "b" : "W", stopline)
+    let marks = breeze#display_marks(marks)
+    return marks
 endfu
 
-fu! breeze#PrevSibling()
-    py breeze_plugin.goto_prev_sibling()
+" To search for all marks
+fu breeze#get_marks(patt, flags, stopline)
+    let view = winsaveview()
+    let marks = split(g:breeze_marks, "\\zs")
+    let candidates = {}
+    while 1
+        let [line, col] = searchpos(a:patt, a:flags, a:stopline)
+        if line == 0 && col == 0 || empty(marks)
+            break
+        end
+        let candidates[remove(marks, 0)] = [line, col]
+    endw
+    cal winrestview(view)
+    return candidates
 endfu
 
-fu! breeze#FirstSibling()
-    py breeze_plugin.goto_first_sibling()
+" To display all marks
+fu breeze#display_marks(marks)
+    cal matchadd("BreezeShade", '\%>'.(line('w0')-1).'l\%<'.line('w$').'l')
+    try | undojoin | catch | endtry
+    let marks = {}
+    for mark in keys(a:marks)
+        let [linenr, colnr] = a:marks[mark]
+        let line = getline(linenr)
+        let marks[mark] = [linenr, colnr, line[colnr]]
+        cal setline(linenr, breeze#subst_char(line, colnr, mark))
+        cal matchadd("BreezeJumpMark", '\%'.linenr.'l\%'.(colnr+1).'c')
+    endfor
+    setl nomodified
+    return marks
 endfu
 
-fu! breeze#LastSibling()
-    py breeze_plugin.goto_last_sibling()
+" To clear all marks
+fu breeze#clear_marks(marks)
+    cal breeze#clear_highlighting()
+    try | undojoin | catch | endtry
+    for [linenr, colnr, oldchar] in values(a:marks)
+        cal setline(linenr, breeze#subst_char(getline(linenr), colnr, oldchar))
+    endfor
+    setl nomodified
 endfu
 
-fu! breeze#FirstChild()
-    py breeze_plugin.goto_first_child()
+" To clear Breeze highlightings
+fu breeze#clear_highlighting()
+    for m in getmatches()
+        if m.group =~ 'BreezeJumpMark\|BreezeShade'
+            cal matchdelete(m.id)
+        end
+    endfor
 endfu
 
-fu! breeze#LastChild()
-    py breeze_plugin.goto_last_child()
+" Utilities
+" =============================================================================
+
+" To substitute a character in a string
+fu breeze#subst_char(str, col, char)
+    let lst = split(a:str, "\\zs")
+    let lst[a:col] = a:char
+    return join(lst, '')
 endfu
 
-fu! breeze#Parent()
-    py breeze_plugin.goto_parent()
+" To get a key pressed by the user
+fu breeze#get_input()
+    let char = strtrans(getchar())
+        if char == 13 | return "<CR>"
+    elseif char == 27 | return "<ESC>"
+    elseif char == 9 | return "<TAB>"
+    elseif char >= 1 && char <= 26 | return "<C-" . nr2char(char+64) . ">"
+    elseif char != 0 | return nr2char(char)
+    elseif match(char, '<fc>^D') > 0 | return "<C-SPACE>"
+    elseif match(char, 'kb') > 0 | return "<BS>"
+    elseif match(char, 'ku') > 0 | return "<UP>"
+    elseif match(char, 'kd') > 0 | return "<DOWN>"
+    elseif match(char, 'kl') > 0 | return "<LEFT>"
+    elseif match(char, 'kr') > 0 | return "<RIGHT>"
+    elseif match(char, 'k\\d\\+') > 0 | return "<F" . match(char, '\\d\\+', 4)] . ">"
+    end
 endfu
-
-" misc
-
-fu! breeze#PrintDom()
-    py breeze_plugin.print_dom()
-endfu
-
-fu! breeze#WhatsWrong()
-    py breeze_plugin.whats_wrong()
-endfu
-
-
-" Autocommands
-" ----------------------------------------------------------------------------
-
-py import breeze.utils.v
-
-augroup breeze_plugin
-    au!
-
-    exe 'au Colorscheme '.g:breeze_active_filetypes.' py breeze_plugin.setup_colors()'
-    exe 'au CursorMoved,CursorMovedI,BufLeave,BufWinLeave,WinLeave *.* py breeze.utils.v.clear_hl("BreezeHl")'
-
-    exe 'au BufReadPost,BufWritePost,BufEnter '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
-    exe 'au CursorHold,CursorHoldI '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
-    exe 'au InsertEnter,InsertLeave '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
-    exe 'au BufWritePost '.g:breeze_active_filetypes.' py breeze_plugin.refresh_cache=True'
-
-    if g:breeze_highlight_curr_element
-        exe 'au CursorMoved '.g:breeze_active_filetypes.' py breeze_plugin.highlight_curr_element()'
-        au InsertEnter *.* py breeze.utils.v.clear_hl("BreezeHl")
-    endif
-
-augroup END

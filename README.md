@@ -1,90 +1,43 @@
-# breeze.vim
+## breeze.vim
 
-### Features
-* HTML navigation inspired by vim-easymotion.
-* Tag matching.
-* Current element highlighting.
-* Low level DOM navigation.
+Breeze is little plugin that provides a handful of EasyMotion-like HTML motions.
 
-### Requirements
-* Vim compiled with python 2.6+
-* Linux, Mac, Windows
+> **Breeze has changed!**
+Since version 2.0 Breeze has undegone significant changes. While some features like tag matching and dom navigation have been removed, the jumping functionality have been strengthened. If you liked real time tag matching I suggest you to try [MatchTagAlways](https://github.com/Valloric/MatchTagAlways), it seems to work much better.
 
 ### Installation
-The recommended way of installing the plugin is via 
-[Vundle](https://github.com/gmarik/vundle), [Pathogen](https://github.com/tpope/vim-pathogen)
-or [Neobundle](https://github.com/Shougo/neobundle.vim)
+Install either with [Vundle](https://github.com/gmarik/vundle), [Pathogen](https://github.com/tpope/vim-pathogen) or [Neobundle](https://github.com/Shougo/neobundle.vim).
 
-### Houston, we have a problem
-For any functionality listed below, if it seems that something is not working
-correctly (e.g. unresponsive commands), run the `BreezeWhatsWrong` command and
-you will be shown the origin of the problem, usually something related to bad
-formatted HTML.
+### Usage
 
+Breeze does not define any mappings for you, you have to map Breeze motions by yourself. Below an example of how you can set you own mappings:
+```vim
+" jump to all visible opening tags after the cursor position
+map <leader>j <Plug>(breeze-jump-tag-forward)
+" jump to all visible opening tags before the cursor position
+map <leader>J <Plug>(breeze-jump-tag-backward)
 
-## Tag jumping
-![Screenshot](extra/jump.gif "Tag jumping inspired by vim-easymotion")   
+" jump to all visible HTML attributes after the cursor position
+map <leader>a <Plug>(breeze-jump-attribute-forward)
+" jump to all visible HTML attributes before the cursor position
+map <leader>A <Plug>(breeze-jump-attribute-backward)
+```
+After triggering one of the mappings above, Breeze will ask you for where you want to jump to. To abort the whole process press either `<ESC>` or `CTRL+C`.
 
-As you can see this way of navigating the document is heavily inspired by
-vim-easymotion. You can use the command `BreezeJumpF` to jump to following
-tags and the `BreezeJumpB` command to jump to preceding tags.
+This is all you have to know to start jumping around your HTML files. Just remember that once you have jumed somewhere you can easily move back to the previous position with `CTRL+O` (`:h CTRL+O`).
 
-When you run one of the aforementioned commands, Breeze displays
-colored marks on the tags you can jump to and wait for your choice.
-Once you have moved to a tag you can easily jump back using the `CTRL+O` 
-vim mapping (:help CTRL+O). Note that when you are asked to insert the target
-key you can exit the whole process pressing either `<ESC>` or `CTRL+C`.
+### Settings
 
+**g:breeze\_prompt**
 
-## Tag matching and current element highlighting
-![Screenshot](extra/high.gif "Current element highlighting")   
+With this option  you can set your own custom prompt.
 
-By default Breeze highlights the opening and closing tags of the current
-element. To turn off this functionality you can set
-`g:breeze_highlight_curr_element` to 0. However, you always have at your
-disposal the `BreezeHlElement` command to highlight the current element.
+Default: `" Target: "`
 
-Another useful command is `BreezeMatchTag`. If the cursor is on an opening tag,
-this command moves the cursor to the corresponding closing tag, and vice-versa.
-If the command is called within an element, this command moves the cursor to
-its opening tag. Remember that you can easily jump back to previous positions
-with `CTRL+O`.
+**g:breeze\_marks**
 
-**Limitations:** At the moment current element highlighting is still
-inefficient for large files and your movements may become quite slow when the
-file is modified.
+With this option you can set the marks used by Breeze to point out all the locations you can jump to.
+
+Default: `"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"`
 
 
-## DOM navigation
-![Screenshot](extra/dom.gif "DOM navigation")   
-
-Commands for DOM navigation cover only low level movements at the moment but
-might be useful for exploring dense HTML files. You can use commands
-such as `BreezeNextSibling`, `BreezePrevSibling`, `BreezeFirstSibling`,
-`BreezeLastSibling`, `BreezeFirstChild`, `BreezeLastChild` and `BreezeParent`.    
-
-
-## Changelog
-See [CHANGELOG.md](CHANGELOG.md).
-
-
-## License
-Copyright (c) 2013 Giacomo Comitti
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
