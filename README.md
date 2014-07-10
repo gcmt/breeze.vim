@@ -3,7 +3,7 @@
 Breeze is little plugin that provides a handful of EasyMotion-like HTML motions.
 
 > **Breeze has changed!**
-Since version 2.0 Breeze has undegone significant changes. While some features like tag matching and dom navigation have been removed, the jumping functionality have been strengthened. If you liked real time tag matching I suggest you to try [MatchTagAlways](https://github.com/Valloric/MatchTagAlways), it seems to work much better.
+Since version 2.0 Breeze has undergone significant changes. While some features like tag matching and dom navigation have been removed, the jumping functionality have been strengthened. If you liked real time tag matching I suggest you to try [MatchTagAlways](https://github.com/Valloric/MatchTagAlways), it seems to work much better.
 
 ### Installation
 Install either with [Vundle](https://github.com/gmarik/vundle), [Pathogen](https://github.com/tpope/vim-pathogen) or [Neobundle](https://github.com/Shougo/neobundle.vim).
@@ -24,7 +24,7 @@ map <leader>A <Plug>(breeze-jump-attribute-backward)
 ```
 After triggering one of the mappings above, Breeze will ask you for where you want to jump to. To abort the whole process press either `<ESC>` or `CTRL+C`.
 
-This is all you have to know to start jumping around your HTML files. Just remember that once you have jumed somewhere you can easily move back to the previous position with `CTRL+O` (`:h CTRL+O`).
+This is all you have to know to start jumping around your HTML files. Just remember that once you have jumped somewhere you can easily move back to the previous position with `CTRL+O` (`:h CTRL+O`).
 
 ### Settings
 
