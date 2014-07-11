@@ -2,10 +2,10 @@
 
 Breeze is little plugin that provides a handful of EasyMotion-like HTML motions.
 
-![Preview](_assets/preview.gif "Preview.")
-
 > **Breeze has changed!**
-Since version 2.0 Breeze has undergone significant changes. While some features like tag matching and dom navigation have been removed, the jumping functionality have been strengthened. If you liked real time tag matching I suggest you to try [MatchTagAlways](https://github.com/Valloric/MatchTagAlways), it seems to work much better.
+Since version 2.0 Breeze has undergone significant changes. While some features like tag matching and dom navigation have been removed, the jumping functionality have been strengthened. If you liked real time tag matching I suggest you to try [MatchTagAlways](https://github.com/Valloric/MatchTagAlways).
+
+![Preview](_assets/preview.gif "Preview.")
 
 ### Installation
 Install either with [Vundle](https://github.com/gmarik/vundle), [Pathogen](https://github.com/tpope/vim-pathogen) or [Neobundle](https://github.com/Shougo/neobundle.vim).
