@@ -52,7 +52,7 @@ endfu
 " To display marks for HTML opening tags
 fu breeze#show_marks_for_tags(backward)
     let stopline = a:backward ? line('w0') : line('w$')
-    let patt = '\v(\<!--\_.{-}(--\>)@!)@<!\<(/|!)@!'
+    let patt = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>"
     let marks = breeze#get_marks(patt, a:backward ? "b" : "W", stopline)
     let marks = breeze#display_marks(marks)
     return marks
