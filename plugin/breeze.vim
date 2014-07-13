@@ -48,6 +48,17 @@ nnoremap <silent> <Plug>(breeze-jump-tag-backward) :cal breeze#JumpTag(1)<CR>
 nnoremap <silent> <Plug>(breeze-jump-attribute-forward) :cal breeze#JumpAttribute(0)<CR>
 nnoremap <silent> <Plug>(breeze-jump-attribute-backward) :cal breeze#JumpAttribute(1)<CR>
 
+" Backward compatibility
+" =============================================================================
+
+command! BreezeJumpF
+    \ echom "[breeze] :BreezeJumpF is deprecated. Use \<Plug\>(breeze-jump-tag-forward) instead." |
+    \ cal breeze#JumpTag(0)
+
+command! BreezeJumpB
+    \ echom "[breeze] :BreezeJumpB is deprecated. Use \<Plug\>(breeze-jump-tag-backward) instead." |
+    \ cal breeze#JumpTag(1)
+
 " Autocommands
 " =============================================================================
 
