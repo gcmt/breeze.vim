@@ -14,6 +14,8 @@ if exists("g:loaded_breeze")
 endif
 let g:loaded_breeze = 1
 
+let g:breeze_version = "v3.0"
+
 let s:save_cpo = &cpo
 set cpo&vim
 
