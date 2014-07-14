@@ -6,6 +6,9 @@
 " License: MIT
 " ============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 fu breeze#JumpTag(backward)
     let marks = s:show_marks_for_tags(a:backward)
     cal s:jump(marks)
@@ -134,3 +137,6 @@ fu s:get_input()
     elseif match(char, 'k\\d\\+') > 0 | return "<F" . match(char, '\\d\\+', 4)] . ">"
     end
 endfu
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
