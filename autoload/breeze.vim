@@ -114,9 +114,7 @@ endfu
 
 " To substitute a character in a string
 fu breeze#subst_char(str, col, char)
-    let lst = split(a:str, "\\zs")
-    let lst[a:col] = a:char
-    return join(lst, '')
+    return strpart(a:str, 0, a:col) . a:char . strpart(a:str, a:col+1)
 endfu
 
 " To get a key pressed by the user
