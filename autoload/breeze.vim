@@ -7,25 +7,25 @@
 " ============================================================================
 
 fu breeze#JumpTag(backward)
-    let marks = breeze#show_marks_for_tags(a:backward)
-    cal breeze#jump(marks)
-    cal breeze#clear_marks(marks)
+    let marks = s:show_marks_for_tags(a:backward)
+    cal s:jump(marks)
+    cal s:clear_marks(marks)
 endfu
 
 fu breeze#JumpAttribute(backward)
-    let marks = breeze#show_marks_for_attributes(a:backward)
-    cal breeze#jump(marks)
-    cal breeze#clear_marks(marks)
+    let marks = s:show_marks_for_attributes(a:backward)
+    cal s:jump(marks)
+    cal s:clear_marks(marks)
 endfu
 
 " To ask the user where to jump and move there
-fu breeze#jump(marks)
+fu s:jump(marks)
     if empty(a:marks) | return | end
     normal! m'
     while 1
         redraw
-        cal breeze#show_prompt()
-        let choice = breeze#get_input()
+        cal s:show_prompt()
+        let choice = s:get_input()
         if choice =~ "<C-C>\\|<ESC>" | break | end
         if has_key(a:marks, choice)
             let [line, col, oldchar] = get(a:marks, choice)
@@ -36,30 +36,30 @@ fu breeze#jump(marks)
 endfu
 
 " To display the prompt
-fu breeze#show_prompt()
+fu s:show_prompt()
     echohl BreezePrompt | echon g:breeze_prompt | echohl None
 endfu
 
 " To display marks for HTML attributes
-fu breeze#show_marks_for_attributes(backward)
+fu s:show_marks_for_attributes(backward)
     let stopline = a:backward ? line('w0') : line('w$')
     let patt = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"|'))"
-    let marks = breeze#get_marks(patt, a:backward ? "b" : "W", stopline)
-    let marks = breeze#display_marks(marks)
+    let marks = s:get_marks(patt, a:backward ? "b" : "W", stopline)
+    let marks = s:display_marks(marks)
     return marks
 endfu
 
 " To display marks for HTML opening tags
-fu breeze#show_marks_for_tags(backward)
+fu s:show_marks_for_tags(backward)
     let stopline = a:backward ? line('w0') : line('w$')
     let patt = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>"
-    let marks = breeze#get_marks(patt, a:backward ? "b" : "W", stopline)
-    let marks = breeze#display_marks(marks)
+    let marks = s:get_marks(patt, a:backward ? "b" : "W", stopline)
+    let marks = s:display_marks(marks)
     return marks
 endfu
 
 " To search for all marks
-fu breeze#get_marks(patt, flags, stopline)
+fu s:get_marks(patt, flags, stopline)
     let view = winsaveview()
     let marks = split(g:breeze_marks, "\\zs")
     let candidates = {}
@@ -75,7 +75,7 @@ fu breeze#get_marks(patt, flags, stopline)
 endfu
 
 " To display all marks
-fu breeze#display_marks(marks)
+fu s:display_marks(marks)
     cal matchadd("BreezeShade", '\%>'.(line('w0')-1).'l\%<'.line('w$').'l')
     try | undojoin | catch | endtry
     let marks = {}
@@ -83,7 +83,7 @@ fu breeze#display_marks(marks)
         let [linenr, colnr] = a:marks[mark]
         let line = getline(linenr)
         let marks[mark] = [linenr, colnr, line[colnr]]
-        cal setline(linenr, breeze#subst_char(line, colnr, mark))
+        cal setline(linenr, s:subst_char(line, colnr, mark))
         cal matchadd("BreezeJumpMark", '\%'.linenr.'l\%'.(colnr+1).'c')
     endfor
     setl nomodified
@@ -91,17 +91,17 @@ fu breeze#display_marks(marks)
 endfu
 
 " To clear all marks
-fu breeze#clear_marks(marks)
-    cal breeze#clear_highlighting()
+fu s:clear_marks(marks)
+    cal s:clear_highlighting()
     try | undojoin | catch | endtry
     for [linenr, colnr, oldchar] in values(a:marks)
-        cal setline(linenr, breeze#subst_char(getline(linenr), colnr, oldchar))
+        cal setline(linenr, s:subst_char(getline(linenr), colnr, oldchar))
     endfor
     setl nomodified
 endfu
 
 " To clear Breeze highlightings
-fu breeze#clear_highlighting()
+fu s:clear_highlighting()
     for m in getmatches()
         if m.group =~ 'BreezeJumpMark\|BreezeShade'
             cal matchdelete(m.id)
@@ -113,12 +113,12 @@ endfu
 " =============================================================================
 
 " To substitute a character in a string
-fu breeze#subst_char(str, col, char)
+fu s:subst_char(str, col, char)
     return strpart(a:str, 0, a:col) . a:char . strpart(a:str, a:col+1)
 endfu
 
 " To get a key pressed by the user
-fu breeze#get_input()
+fu s:get_input()
     let char = strtrans(getchar())
         if char == 13 | return "<CR>"
     elseif char == 27 | return "<ESC>"
