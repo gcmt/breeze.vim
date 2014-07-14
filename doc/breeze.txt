@@ -37,16 +37,16 @@ Breeze does not define any mappings for you, you have to map Breeze motions
 by yourself. Below an example of how you can set you own mappings:
 >
     " jump to all visible opening tags after the cursor position
-    map <leader>j <Plug>(breeze-jump-tag-forward)
+    nmap <leader>j <Plug>(breeze-jump-tag-forward)
 
     " jump to all visible opening tags before the cursor position
-    map <leader>J <Plug>(breeze-jump-tag-backward)
+    nmap <leader>J <Plug>(breeze-jump-tag-backward)
 
     " jump to all visible HTML attributes after the cursor position
-    map <leader>a <Plug>(breeze-jump-attribute-forward)
+    nmap <leader>a <Plug>(breeze-jump-attribute-forward)
 
     " jump to all visible HTML attributes before the cursor position
-    map <leader>A <Plug>(breeze-jump-attribute-backward)
+    nmap <leader>A <Plug>(breeze-jump-attribute-backward)
 <
 After triggering one of the mappings above, Breeze will ask you for where
 you want to jump to. To abort the whole process press either `<ESC>` or `CTRL+C`.
