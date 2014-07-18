@@ -9,6 +9,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" Core functions
+" ============================================================================
+
 fu breeze#JumpTag(backward)
     let marks = s:show_marks_for_tags(a:backward)
     cal s:jump(marks)
@@ -19,28 +22,6 @@ fu breeze#JumpAttribute(backward)
     let marks = s:show_marks_for_attributes(a:backward)
     cal s:jump(marks)
     cal s:clear_marks(marks)
-endfu
-
-" To ask the user where to jump and move there
-fu s:jump(marks)
-    if empty(a:marks) | return | end
-    normal! m'
-    while 1
-        redraw
-        cal s:show_prompt()
-        let choice = s:get_input()
-        if choice =~ "<C-C>\\|<ESC>" | break | end
-        if has_key(a:marks, choice)
-            let [line, col, oldchar] = get(a:marks, choice)
-            cal setpos(".", [0, line, col+1, 0])
-            break
-        end
-    endw
-endfu
-
-" To display the prompt
-fu s:show_prompt()
-    echohl BreezePrompt | echon g:breeze_prompt | echohl None
 endfu
 
 " To display marks for HTML attributes
@@ -86,42 +67,66 @@ fu s:display_marks(marks)
         let [linenr, colnr] = a:marks[mark]
         let line = getline(linenr)
         let marks[mark] = [linenr, colnr, line[colnr]]
-        cal setline(linenr, s:subst_char(line, colnr, mark))
+        cal setline(linenr, s:str_subst(line, colnr, mark))
         cal matchadd("BreezeJumpMark", '\%'.linenr.'l\%'.(colnr+1).'c')
     endfor
     setl nomodified
     return marks
 endfu
 
-" To clear all marks
-fu s:clear_marks(marks)
-    cal s:clear_highlighting()
-    try | undojoin | catch | endtry
-    for [linenr, colnr, oldchar] in values(a:marks)
-        cal setline(linenr, s:subst_char(getline(linenr), colnr, oldchar))
-    endfor
-    setl nomodified
+" To ask the user where to jump and move there
+fu s:jump(marks)
+    if empty(a:marks) | return | end
+    normal! m'
+    while 1
+        redraw
+        cal s:show_prompt()
+        let choice = s:get_char()
+        if choice =~ '<C-C>\|<ESC>'
+            break
+        end
+        if has_key(a:marks, choice)
+            let [line, col, oldchar] = get(a:marks, choice)
+            cal setpos(".", [0, line, col+1, 0])
+            break
+        end
+    endw
 endfu
 
-" To clear Breeze highlightings
-fu s:clear_highlighting()
-    for m in getmatches()
-        if m.group =~ 'BreezeJumpMark\|BreezeShade'
-            cal matchdelete(m.id)
-        end
+" To display the prompt
+fu s:show_prompt()
+    echohl BreezePrompt | echon g:breeze_prompt | echohl None
+endfu
+
+" To clear all marks
+fu s:clear_marks(marks)
+    cal s:clear_matches('BreezeJumpMark', 'BreezeShade')
+    try | undojoin | catch | endtry
+    for [linenr, colnr, oldchar] in values(a:marks)
+        cal setline(linenr, s:str_subst(getline(linenr), colnr, oldchar))
     endfor
+    setl nomodified
 endfu
 
 " Utilities
 " =============================================================================
 
+" To clear matches for all given groups
+fu s:clear_matches(...)
+    for m in getmatches()
+        if index(a:000, m.group) != -1
+            cal matchdelete(m.id)
+        end
+    endfor
+endfu
+
 " To substitute a character in a string
-fu s:subst_char(str, col, char)
+fu s:str_subst(str, col, char)
     return strpart(a:str, 0, a:col) . a:char . strpart(a:str, a:col+1)
 endfu
 
 " To get a key pressed by the user
-fu s:get_input()
+fu s:get_char()
     let char = strtrans(getchar())
         if char == 13 | return "<CR>"
     elseif char == 27 | return "<ESC>"
@@ -137,6 +142,8 @@ fu s:get_input()
     elseif match(char, 'k\\d\\+') > 0 | return "<F" . match(char, '\\d\\+', 4)] . ">"
     end
 endfu
+
+" =============================================================================
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
