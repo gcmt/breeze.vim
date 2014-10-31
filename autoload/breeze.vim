@@ -12,34 +12,23 @@ set cpo&vim
 " Internal variables
 " ============================================================================
 
-let s:attr_pattern = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"|'))"
-let s:tag_pattern = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>"
+let s:regex_for = {
+\ "attribute": "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"|'))",
+\ "tag": "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>",
+\ }
 
 " Core functions
 " ============================================================================
 
-fu breeze#MoveToTag(backward)
+fu breeze#Jump(target, backward)
     normal! m'
-    if search(s:tag_pattern, a:backward ? "b" : "W")
+    if search(s:regex_for[a:target], a:backward ? "b" : "W")
         norm! l
     endif
 endfu
 
-fu breeze#MoveToAttribute(backward)
-    normal! m'
-    if search(s:attr_pattern, a:backward ? "b" : "W")
-        norm! l
-    endif
-endfu
-
-fu breeze#JumpTag(backward)
-    let marks = s:show_marks(a:backward, s:tag_pattern)
-    cal s:jump(marks)
-    cal s:clear_marks(marks)
-endfu
-
-fu breeze#JumpAttribute(backward)
-    let marks = s:show_marks(a:backward, s:attr_pattern)
+fu breeze#JumpAsk(target, backward)
+    let marks = s:show_marks(a:backward, s:regex_for[a:target])
     cal s:jump(marks)
     cal s:clear_marks(marks)
 endfu

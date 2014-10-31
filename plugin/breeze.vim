@@ -57,21 +57,21 @@ endfu
 " Mappings
 " =============================================================================
 
-nnoremap <silent> <Plug>(breeze-next-tag) :cal breeze#MoveToTag(0)<CR>
-nnoremap <silent> <Plug>(breeze-prev-tag) :cal breeze#MoveToTag(1)<CR>
-nnoremap <silent> <Plug>(breeze-next-tag-hl) :cal breeze#MoveToTag(0)<CR>:cal <SID>highlight_line()<CR>
-nnoremap <silent> <Plug>(breeze-prev-tag-hl) :cal breeze#MoveToTag(1)<CR>:cal <SID>highlight_line()<CR>
+nnoremap <silent> <Plug>(breeze-next-tag) :cal breeze#Jump("tag", 0)<CR>
+nnoremap <silent> <Plug>(breeze-prev-tag) :cal breeze#Jump("tag", 1)<CR>
+nnoremap <silent> <Plug>(breeze-next-tag-hl) :cal breeze#Jump("tag", 0)<CR>:cal <SID>highlight_line()<CR>
+nnoremap <silent> <Plug>(breeze-prev-tag-hl) :cal breeze#Jump("tag", 1)<CR>:cal <SID>highlight_line()<CR>
 
-nnoremap <silent> <Plug>(breeze-next-attribute) :cal breeze#MoveToAttribute(0)<CR>
-nnoremap <silent> <Plug>(breeze-prev-attribute) :cal breeze#MoveToAttribute(1)<CR>
-nnoremap <silent> <Plug>(breeze-next-attribute-hl) :cal breeze#MoveToAttribute(0)<CR>:cal <SID>highlight_line()<CR>
-nnoremap <silent> <Plug>(breeze-prev-attribute-hl) :cal breeze#MoveToAttribute(1)<CR>:cal <SID>highlight_line()<CR>
+nnoremap <silent> <Plug>(breeze-next-attribute) :cal breeze#Jump("attribute", 0)<CR>
+nnoremap <silent> <Plug>(breeze-prev-attribute) :cal breeze#Jump("attribute", 1)<CR>
+nnoremap <silent> <Plug>(breeze-next-attribute-hl) :cal breeze#Jump("attribute", 0)<CR>:cal <SID>highlight_line()<CR>
+nnoremap <silent> <Plug>(breeze-prev-attribute-hl) :cal breeze#Jump("attribute", 1)<CR>:cal <SID>highlight_line()<CR>
 
-nnoremap <silent> <Plug>(breeze-jump-tag-forward) :cal breeze#JumpTag(0)<CR>
-nnoremap <silent> <Plug>(breeze-jump-tag-backward) :cal breeze#JumpTag(1)<CR>
+nnoremap <silent> <Plug>(breeze-jump-tag-forward) :cal breeze#JumpAsk("tag", 0)<CR>
+nnoremap <silent> <Plug>(breeze-jump-tag-backward) :cal breeze#JumpAsk("tag", 1)<CR>
 
-nnoremap <silent> <Plug>(breeze-jump-attribute-forward) :cal breeze#JumpAttribute(0)<CR>
-nnoremap <silent> <Plug>(breeze-jump-attribute-backward) :cal breeze#JumpAttribute(1)<CR>
+nnoremap <silent> <Plug>(breeze-jump-attribute-forward) :cal breeze#JumpAsk("attribute", 0)<CR>
+nnoremap <silent> <Plug>(breeze-jump-attribute-backward) :cal breeze#JumpAsk("attribute", 1)<CR>
 
 " Autocommands
 " =============================================================================
@@ -80,7 +80,7 @@ augroup breeze
     au!
     au BufWritePost .vimrc cal s:setup_colors()
     au Colorscheme * cal s:setup_colors()
-    au CursorMoved,CursorMovedI,WinLeave * call <SID>clear_highlighting()
+    au CursorMoved,CursorMovedI,WinLeave * cal s:clear_highlighting()
 augroup END
 
 " =============================================================================
