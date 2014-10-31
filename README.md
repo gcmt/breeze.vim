@@ -43,7 +43,7 @@ nmap <C-A> <Plug>(breeze-next-attribute)
 nmap <C-S> <Plug>(breeze-prev-attribute)
 ```
 
-**TIP:** use `<Plug>(breeze-next-tag-hl)`, `<Plug>(breeze-prev-tag-hl)`, `<Plug>(breeze-next-attribute-hl)` and `<Plug>(breeze-prev-attribute-hl)` in order to have the current line highlighted whenever you move to a tag or attribute.
+**TIP:** use `<Plug>(breeze-next-tag-hl)`, `<Plug>(breeze-prev-tag-hl)`, `<Plug>(breeze-next-attribute-hl)` and `<Plug>(breeze-prev-attribute-hl)` in order to highlight the line you move to.
 
 This is all you have to know to start jumping around your HTML files. Just remember that once you have jumped somewhere you can easily move back to the previous position with `CTRL+O` (`:h CTRL+O`).
 
