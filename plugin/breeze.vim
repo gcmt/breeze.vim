@@ -26,6 +26,7 @@ fu! s:setup_colors()
     hi default link BreezeJumpMark WarningMsg
     hi default link BreezeShade Comment
     hi default link BreezePrompt String
+    hi default link BreezeHighlightLine Search
 endfu
 
 cal s:setup_colors()
@@ -39,13 +40,33 @@ let g:breeze_prompt =
 let g:breeze_marks =
     \ get(g:, "breeze_marks", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
+" Highlight the current line
+" =============================================================================
+
+" To highlight the current line
+fu s:highlight_line()
+    if exists("s:hl") | call s:clear_highlighting() | endif
+    let s:hl = matchadd("BreezeHighlightLine", '\%'.line(".")."l", -1) | redraw
+endfu
+
+fu s:clear_highlighting()
+    sil! call matchdelete(s:hl)
+    unlet! s:hl
+endfu
+
 " Mappings
 " =============================================================================
 
 nnoremap <silent> <Plug>(breeze-next-tag) :cal breeze#MoveToTag(0)<CR>
 nnoremap <silent> <Plug>(breeze-prev-tag) :cal breeze#MoveToTag(1)<CR>
+nnoremap <silent> <Plug>(breeze-next-tag-hl) :cal breeze#MoveToTag(0)<CR>:cal <SID>highlight_line()<CR>
+nnoremap <silent> <Plug>(breeze-prev-tag-hl) :cal breeze#MoveToTag(1)<CR>:cal <SID>highlight_line()<CR>
+
 nnoremap <silent> <Plug>(breeze-next-attribute) :cal breeze#MoveToAttribute(0)<CR>
 nnoremap <silent> <Plug>(breeze-prev-attribute) :cal breeze#MoveToAttribute(1)<CR>
+nnoremap <silent> <Plug>(breeze-next-attribute-hl) :cal breeze#MoveToAttribute(0)<CR>:cal <SID>highlight_line()<CR>
+nnoremap <silent> <Plug>(breeze-prev-attribute-hl) :cal breeze#MoveToAttribute(1)<CR>:cal <SID>highlight_line()<CR>
+
 nnoremap <silent> <Plug>(breeze-jump-tag-forward) :cal breeze#JumpTag(0)<CR>
 nnoremap <silent> <Plug>(breeze-jump-tag-backward) :cal breeze#JumpTag(1)<CR>
 
@@ -70,6 +91,7 @@ augroup breeze
     au!
     au BufWritePost .vimrc cal s:setup_colors()
     au Colorscheme * cal s:setup_colors()
+    au CursorMoved,CursorMovedI,WinLeave * call <SID>clear_highlighting()
 augroup END
 
 " =============================================================================
