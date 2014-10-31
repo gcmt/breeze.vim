@@ -42,6 +42,10 @@ let g:breeze_marks =
 " Mappings
 " =============================================================================
 
+nnoremap <silent> <Plug>(breeze-next-tag) :cal breeze#MoveToTag(0)<CR>
+nnoremap <silent> <Plug>(breeze-prev-tag) :cal breeze#MoveToTag(1)<CR>
+nnoremap <silent> <Plug>(breeze-next-attribute) :cal breeze#MoveToAttribute(0)<CR>
+nnoremap <silent> <Plug>(breeze-prev-attribute) :cal breeze#MoveToAttribute(1)<CR>
 nnoremap <silent> <Plug>(breeze-jump-tag-forward) :cal breeze#JumpTag(0)<CR>
 nnoremap <silent> <Plug>(breeze-jump-tag-backward) :cal breeze#JumpTag(1)<CR>
 

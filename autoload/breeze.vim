@@ -9,35 +9,45 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" Internal variables
+" ============================================================================
+
+let s:attr_pattern = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"|'))"
+let s:tag_pattern = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>"
+
 " Core functions
 " ============================================================================
 
+fu breeze#MoveToTag(backward)
+    normal! m'
+    if search(s:tag_pattern, a:backward ? "b" : "W")
+        norm! l
+    endif
+endfu
+
+fu breeze#MoveToAttribute(backward)
+    normal! m'
+    if search(s:attr_pattern, a:backward ? "b" : "W")
+        norm! l
+    endif
+endfu
+
 fu breeze#JumpTag(backward)
-    let marks = s:show_marks_for_tags(a:backward)
+    let marks = s:show_marks(a:backward, s:tag_pattern)
     cal s:jump(marks)
     cal s:clear_marks(marks)
 endfu
 
 fu breeze#JumpAttribute(backward)
-    let marks = s:show_marks_for_attributes(a:backward)
+    let marks = s:show_marks(a:backward, s:attr_pattern)
     cal s:jump(marks)
     cal s:clear_marks(marks)
 endfu
 
-" To display marks for HTML attributes
-fu s:show_marks_for_attributes(backward)
+" To display marks for HTML attributes or tags
+fu s:show_marks(backward, pattern)
     let stopline = a:backward ? line('w0') : line('w$')
-    let patt = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"|'))"
-    let marks = s:get_marks(patt, a:backward ? "b" : "W", stopline)
-    let marks = s:display_marks(marks)
-    return marks
-endfu
-
-" To display marks for HTML opening tags
-fu s:show_marks_for_tags(backward)
-    let stopline = a:backward ? line('w0') : line('w$')
-    let patt = "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>"
-    let marks = s:get_marks(patt, a:backward ? "b" : "W", stopline)
+    let marks = s:get_marks(a:pattern, a:backward ? "b" : "W", stopline)
     let marks = s:display_marks(marks)
     return marks
 endfu
