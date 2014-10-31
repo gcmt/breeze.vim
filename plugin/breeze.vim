@@ -26,7 +26,7 @@ fu! s:setup_colors()
     hi default link BreezeJumpMark WarningMsg
     hi default link BreezeShade Comment
     hi default link BreezePrompt String
-    hi default link BreezeHighlightLine Search
+    hi default link BreezeHighlightLine CursorLine
 endfu
 
 cal s:setup_colors()
