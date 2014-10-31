@@ -28,20 +28,14 @@ fu breeze#Jump(target, backward)
 endfu
 
 fu breeze#JumpAsk(target, backward)
-    let marks = s:show_marks(a:backward, s:regex_for[a:target])
-    cal s:jump(marks)
-    cal s:clear_marks(marks)
-endfu
-
-" To display marks for HTML attributes or tags
-fu s:show_marks(backward, pattern)
     let stopline = a:backward ? line('w0') : line('w$')
-    let marks = s:get_marks(a:pattern, a:backward ? "b" : "W", stopline)
-    let marks = s:display_marks(marks)
-    return marks
+    let marks = s:get_marks(s:regex_for[a:target], a:backward ? "b" : "W", stopline)
+    let changed_chars = s:display_marks(marks)
+    cal s:jump(marks)
+    cal s:clear_marks(changed_chars)
 endfu
 
-" To search for all marks
+" To search for all candidate marks
 fu s:get_marks(patt, flags, stopline)
     let view = winsaveview()
     let marks = split(g:breeze_marks, "\\zs")
@@ -61,16 +55,15 @@ endfu
 fu s:display_marks(marks)
     cal matchadd("BreezeShade", '\%>'.(line('w0')-1).'l\%<'.line('w$').'l')
     try | undojoin | catch | endtry
-    let marks = {}
+    let changed_chars = []
     for mark in keys(a:marks)
         let [linenr, colnr] = a:marks[mark]
-        let line = getline(linenr)
-        let marks[mark] = [linenr, colnr, line[colnr]]
-        cal setline(linenr, s:str_subst(line, colnr, mark))
+        let changed_chars = add(changed_chars, [getline(linenr)[colnr], linenr, colnr])
+        cal setline(linenr, s:str_subst(getline(linenr), colnr, mark))
         cal matchadd("BreezeJumpMark", '\%'.linenr.'l\%'.(colnr+1).'c')
     endfor
     setl nomodified
-    return marks
+    return changed_chars
 endfu
 
 " To ask the user where to jump and move there
@@ -85,8 +78,8 @@ fu s:jump(marks)
             break
         end
         if has_key(a:marks, choice)
-            let [line, col, oldchar] = get(a:marks, choice)
-            cal setpos(".", [0, line, col+1, 0])
+            cal setpos(".", [0] + get(a:marks, choice) + [0])
+            norm! l
             break
         end
     endw
@@ -98,10 +91,10 @@ fu s:show_prompt()
 endfu
 
 " To clear all marks
-fu s:clear_marks(marks)
+fu s:clear_marks(changed_chars)
     cal s:clear_matches('BreezeJumpMark', 'BreezeShade')
     try | undojoin | catch | endtry
-    for [linenr, colnr, oldchar] in values(a:marks)
+    for [oldchar, linenr, colnr] in a:changed_chars
         cal setline(linenr, s:str_subst(getline(linenr), colnr, oldchar))
     endfor
     setl nomodified
