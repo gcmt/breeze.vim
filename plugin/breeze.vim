@@ -45,8 +45,8 @@ let g:breeze_marks =
 
 " To highlight the current line
 fu s:highlight_line()
-    if exists("s:hl") | call s:clear_highlighting() | endif
-    let s:hl = matchadd("BreezeHighlightLine", '\%'.line(".")."l", -1) | redraw
+    let s:hl = matchadd("BreezeHighlightLine", '\%'.line(".")."l")
+    redraw
 endfu
 
 fu s:clear_highlighting()
