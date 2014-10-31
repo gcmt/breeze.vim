@@ -26,7 +26,7 @@ fu! s:setup_colors()
     hi default link BreezeJumpMark WarningMsg
     hi default link BreezeShade Comment
     hi default link BreezePrompt String
-    hi default link BreezeHighlightLine CursorLine
+    hi default link BreezeHighlightedLine CursorLine
 endfu
 
 cal s:setup_colors()
@@ -45,7 +45,7 @@ let g:breeze_marks =
 
 " To highlight the current line
 fu s:highlight_line()
-    let s:hl = matchadd("BreezeHighlightLine", '\%'.line(".")."l")
+    let s:hl = matchadd("BreezeHighlightedLine", '\%'.line(".")."l")
     redraw
 endfu
 
