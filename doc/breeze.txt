@@ -130,7 +130,7 @@ You can change default colors with the following highlight groups:
 - `BreezeJumpMark`: this color group is used to highlight all jump marks.
 - `BreezeShade`: this color group is used to highlight anything but jump marks.
 - `BreezePrompt`: this color group is used for the prompt look.
-- `BreezeHighlightLine`: this color group is used to highlight the current line
+- `BreezeHighlightedLine`: this color group is used to highlight the current line
    whenever you move to a tag or attribute.
 
 Below an example of how you can customize default colors:
