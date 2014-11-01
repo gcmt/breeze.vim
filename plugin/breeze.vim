@@ -45,12 +45,13 @@ let g:breeze_marks =
 
 " To highlight the current line
 fu s:highlight_line()
+    sil! cal s:clear_highlighting()
     let s:hl = matchadd("BreezeHighlightedLine", '\%'.line(".")."l")
     redraw
 endfu
 
 fu s:clear_highlighting()
-    sil! call matchdelete(s:hl)
+    sil! cal matchdelete(s:hl)
     unlet! s:hl
 endfu
 
