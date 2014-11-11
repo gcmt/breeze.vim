@@ -13,7 +13,7 @@ set cpo&vim
 " ============================================================================
 
 let s:regex_for = {
-\ "attribute": "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"|'))",
+\ "attribute": "\\v(\\<!--\\_.{-}(--\\>)@!)@<!((\\<[^>]{-})@<=(\\=)@<=(\"[^\"]*\"|'[^']*'))",
 \ "tag": "\\v(\\<!--\\_.{-}(--\\>)@!)@<!\\<[^/!](\"[^\"]*\"|'[^']*'|[^\"'>])*\\>",
 \ }
 
@@ -21,9 +21,12 @@ let s:regex_for = {
 " ============================================================================
 
 fu breeze#Jump(target, backward)
-    normal! m'
-    if search(s:regex_for[a:target], a:backward ? "b" : "W")
-        norm! l
+	let repeat = !a:backward ? 0 : s:inside(a:target)
+    if search(s:regex_for[a:target], a:backward ? "sbW" : "sW")
+		if repeat
+			cal search(s:regex_for[a:target], a:backward ? "sbW" : "sW")
+		end
+		norm! l
     endif
 endfu
 
@@ -33,6 +36,20 @@ fu breeze#JumpAsk(target, backward)
     let changed_chars = s:display_marks(marks)
     cal s:jump(marks)
     cal s:clear_marks(changed_chars)
+endfu
+
+" To check if the cursor is inside a tag or attribute
+fu! s:inside(target)
+	let pattern = s:regex_for[a:target]
+	let [lnum, col] = searchpos(s:regex_for[a:target], "nb")
+    if lnum != 0 && col != 0 && lnum == line(".")
+		let start_match = col
+		let end_match = start_match + strlen(matchstr(getline("."), pattern, col-1, 1))
+		if col(".") >= start_match && col(".") <= end_match
+			return 1
+		end
+	end
+	return 0
 endfu
 
 " To search for all candidate marks
