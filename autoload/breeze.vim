@@ -32,7 +32,7 @@ endfu
 
 fu breeze#JumpAsk(target, backward)
     let stopline = a:backward ? line('w0') : line('w$')
-    let marks = s:get_marks(s:regex_for[a:target], a:backward ? "b" : "W", stopline)
+    let marks = s:get_marks(s:regex_for[a:target], a:backward ? "sb" : "sW", stopline)
     let changed_chars = s:display_marks(marks)
     cal s:jump(marks)
     cal s:clear_marks(changed_chars)
