@@ -22,9 +22,9 @@ let s:regex_for = {
 
 fu breeze#Jump(target, backward)
     let repeat = !a:backward ? 0 : s:inside(a:target)
-    if search(s:regex_for[a:target], a:backward ? "sbW" : "sW")
+    if search(s:regex_for[a:target], a:backward ? "bW" : "W")
         if repeat
-            cal search(s:regex_for[a:target], a:backward ? "sbW" : "sW")
+            cal search(s:regex_for[a:target], a:backward ? "bW" : "W")
         end
         norm! l
     endif
