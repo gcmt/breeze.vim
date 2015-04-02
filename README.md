@@ -13,7 +13,7 @@ Install either with [Vundle](https://github.com/gmarik/vundle), [Pathogen](https
 
 ### Usage
 
-Breeze does not define any mappings for you, you have to map Breeze motions by yourself. Below an example of how you can set you own mappings:
+Breeze does not define any mappings for you, you have to map Breeze motions by yourself. Below an example of how you can set your own mappings:
 
 ```vim
 " jump to all visible opening tags after the cursor position
