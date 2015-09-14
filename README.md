@@ -1,9 +1,6 @@
 ## breeze.vim
 
-Breeze is little plugin that provides a handful of EasyMotion-like HTML motions.
-
-> **Breeze has changed!**
-Since version 2.0 Breeze has undergone significant changes. While some features like tag matching and dom navigation have been removed, the jumping functionality have been strengthened. Have a look at [MatchTagAlways](https://github.com/Valloric/MatchTagAlways) for a good tag matching alternative.
+Breeze provides a handful of EasyMotion-like HTML motions.
 
 ![Preview](_assets/preview.gif "Preview.")
 
